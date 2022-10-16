@@ -371,7 +371,6 @@ def create_dataloader(path, imgsz, batch_size, stride, opt, epoch_size=300, hyp=
                                   stride=int(stride),
                                   pad=pad,
                                   image_weights=image_weights,
-                                  max_box_per_img=max_box_per_img,
                                   prefix=prefix)
 
     cores = multiprocessing.cpu_count()

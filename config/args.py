@@ -7,7 +7,7 @@ def get_args():
     parser.add_argument('--device_target', type=str, default='CPU', help='device target, Ascend/GPU/CPU')
     parser.add_argument('--weights', type=str, default='', help='initial weights path')
     parser.add_argument('--ema_weight', type=str, default='', help='initial ema weights path')
-    parser.add_argument('--cfg', type=str, default='./config/network_yolov7/yolov7.yaml', help='model.yaml path')
+    parser.add_argument('--cfg', type=str, default='./config/models/yolov5s.yaml', help='model.yaml path')
     parser.add_argument('--data', type=str, default='./config/data/coco.yaml', help='data.yaml path')
     parser.add_argument('--hyp', type=str, default='./config/data/hyp.scratch-low.yaml', help='hyperparameters path')
     parser.add_argument('--epochs', type=int, default=300)

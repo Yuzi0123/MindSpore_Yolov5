@@ -26,9 +26,9 @@ from mindspore.ops import functional as F
 
 from network.yolo import Model
 from network.common import ModelEMA
-from network.loss import ComputeLoss, ComputeLossOTA
+from network.loss import ComputeLoss
 from config.args import get_args
-from utils.optimizer import get_group_param_yolov7, get_lr_yolov7
+# from utils.optimizer import get_group_param_yolov7, get_lr_yolov7
 from utils.dataset import create_dataloader
 from utils.general import increment_path, colorstr, labels_to_class_weights, check_file, check_img_size, all_finite_cpu
 
