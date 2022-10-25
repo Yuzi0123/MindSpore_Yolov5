@@ -152,7 +152,7 @@ class Contract(nn.Cell):
         super().__init__()
         self.gain = gain
 
-    def forward(self, x):
+    def construct(self, x):
         b, c, h, w = x.size()  # assert (h / s == 0) and (W / s == 0), 'Indivisible gain'
         s = self.gain
         x = x.view(b, c, h // s, s, w // s, s)  # x(1,64,40,2,40,2)
@@ -165,7 +165,7 @@ class Expand(nn.Cell):
         super().__init__()
         self.gain = gain
 
-    def forward(self, x):
+    def construct(self, x):
         b, c, h, w = x.size()  # assert C / s ** 2 == 0, 'Indivisible gain'
         s = self.gain
         x = x.view(b, s, s, c // s ** 2, h, w)  # x(1,2,2,16,80,80)
@@ -214,8 +214,8 @@ class Detect(nn.Cell):
     def construct(self, x):
         outs = ()
         for i in range(self.nl):
-            out = self.m[i](self.ia[i](x[i]))  # conv
-            out = self.im[i](out)
+            out = self.m[i](x[i])  # conv
+            # out = self.im[i](out)
             bs, _, ny, nx = out.shape  # x(bs,255,20,20) to x(bs,3,20,20,85)
             out = ops.Transpose()(out.view(bs, self.na, self.no, ny, nx), (0, 1, 3, 4, 2))
             outs += (out,)
@@ -252,7 +252,7 @@ class Proto(nn.Cell):
         self.cv2 = Conv(c_, c_, k=3)
         self.cv3 = Conv(c_, c2)
 
-    def forward(self, x):
+    def construct(self, x):
         return self.cv3(self.cv2(self.upsample(self.cv1(x))))
 
 class Segment(Detect):
@@ -269,9 +269,9 @@ class Segment(Detect):
                                         bias_init=_init_bias((self.no * self.na, x, 1, 1))) for x in ch])  # output conv
         # self.m = nn.ModuleList(nn.Conv2d(x, self.no * self.na, 1) for x in ch)  # output conv
         self.proto = Proto(ch[0], self.npr, self.nm)  # protos
-        self.detect = Detect.forward
+        self.detect = Detect.construct
 
-    def forward(self, x):
+    def construct(self, x):
         p = self.proto(x[0])
         x = self.detect(self, x)
         return (x, p) if self.training else (x[0], p) if self.export else (x[0], p, x[1])
@@ -296,7 +296,7 @@ def parse_model(d, ch, sync_bn=False):  # model_dict, input_channels(3)
                 pass
 
         n = max(round(n * gd), 1) if n > 1 else n  # depth gain
-        if m in [nn.Conv2d, Conv, C3]:
+        if m in [nn.Conv2d, Conv, C3, SPPF, Bottleneck]:
             c1, c2 = ch[f], args[0]
             if c2 != no:  # if not output
                 c2 = make_divisible(c2 * gw, 8)

@@ -64,7 +64,7 @@ def img2label_paths(img_paths):
 
 class LoadImagesAndLabels:  # for training/testing
     def __init__(self, path, img_size=640, batch_size=16, augment=False, hyp=None, rect=False, image_weights=False,
-                 cache_images=False, single_cls=False, stride=32, pad=0.0, prefix=''):
+                 cache_images=False, single_cls=False, stride=32, pad=0.0, max_box_per_img=160, prefix=''):
         self.img_size = img_size
         self.augment = augment
         self.hyp = hyp
@@ -74,6 +74,7 @@ class LoadImagesAndLabels:  # for training/testing
         self.mosaic_border = [-img_size // 2, -img_size // 2]
         self.stride = stride
         self.path = path
+        self.max_box_per_img = max_box_per_img
         # self.albumentations = Albumentations() if augment else None
 
         try:

@@ -3,15 +3,18 @@ import ast
 
 def get_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--ms_strategy', type=str, default='StaticShape', help='train strategy, StaticShape/MultiShape/DynamicShape')
     parser.add_argument('--is_distributed', type=ast.literal_eval, default=False, help='Distribute train or not')
-    parser.add_argument('--device_target', type=str, default='CPU', help='device target, Ascend/GPU/CPU')
+    parser.add_argument('--device_target', type=str, default='GPU', help='device target, Ascend/GPU/CPU')
     parser.add_argument('--weights', type=str, default='', help='initial weights path')
     parser.add_argument('--ema_weight', type=str, default='', help='initial ema weights path')
     parser.add_argument('--cfg', type=str, default='./config/models/yolov5s.yaml', help='model.yaml path')
     parser.add_argument('--data', type=str, default='./config/data/coco.yaml', help='data.yaml path')
+    # parser.add_argument('--data', type=str, default='/home/data/lrd/yolov7/data/sslad_labeled.yaml', help='data.yaml path')
+
     parser.add_argument('--hyp', type=str, default='./config/data/hyp.scratch-low.yaml', help='hyperparameters path')
     parser.add_argument('--epochs', type=int, default=300)
-    parser.add_argument('--batch-size', type=int, default=16, help='total batch size for all device')
+    parser.add_argument('--batch-size', type=int, default=2, help='total batch size for all device')
     parser.add_argument('--img-size', nargs='+', type=int, default=[640, 640], help='[train, test] image sizes')
     parser.add_argument('--rect', action='store_true', help='rectangular training')
     parser.add_argument('--resume', nargs='?', const=True, default=False, help='resume most recent training')
