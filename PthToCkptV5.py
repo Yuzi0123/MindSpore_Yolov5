@@ -230,7 +230,7 @@ def pytorch2mindspore(weight, is_model=False):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='test.py')
     parser.add_argument('--convert_mode', type=str, default='torch2ms', help='train mode, torch2ms/ms2torch')
-    parser.add_argument('--weight', type=str, default='/home/data/lipw22/YoloV5s_MS/code/V5key.pt', help='source checkpoint file')
+    parser.add_argument('--weight', type=str, default='/data1/lurenjie-yolov5s/yolov5s_mindspore/V5key.pt', help='source checkpoint file')
     parser.add_argument('--is_model', type=ast.literal_eval, default=False, help='Distribute train or not')
     opt = parser.parse_args()
 

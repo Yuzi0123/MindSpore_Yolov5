@@ -6,19 +6,23 @@ import mindspore as ms
 import mindspore.numpy as mnp
 from mindspore import nn, ops, Tensor
 from mindspore.common.initializer import HeUniform
-from utils.general import make_divisible
+
+import sys
+sys.path.insert(0, "/data1/lurenjie-yolov5s/yolov5s_mindspore")
+
 from utils.autoanchor import check_anchor_order
-from network.common import parse_model, Detect, Segment
+from network.common import parse_model, Detect
 
 
 def initialize_weights(model):
-    for m in model.cells():
-        t = type(m)
-        if t is nn.Conv2d:
+    for n, m in model.cells_and_names():
+        if isinstance(m, nn.Conv2d):
             pass  # nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
-        elif t in (nn.BatchNorm2d, nn.SyncBatchNorm):
-            m.eps = 1e-3
-            m.momentum = 0.03
+        elif isinstance(m, (nn.BatchNorm2d, nn.SyncBatchNorm)):
+            pass
+            # This modification is invalid.
+            # m.eps = 1e-3
+            # m.momentum = 0.03
 
 @ops.constexpr
 def _get_h_w_list(ratio, gs, hw):
@@ -46,7 +50,7 @@ def _get_stride_max(stride):
     return int(stride.max())
 
 class Model(nn.Cell):
-    def __init__(self, cfg='yolov5s.yaml', ch=3, nc=None, anchors=None, sync_bn=False):  # model, input channels, number of classes
+    def __init__(self, cfg='yolov5s.yaml', ch=3, nc=None, anchors=None, sync_bn=False, opt=None):  # model, input channels, number of classes
         super(Model, self).__init__()
         self.traced = False
         if isinstance(cfg, dict):
@@ -67,14 +71,20 @@ class Model(nn.Cell):
             self.yaml['anchors'] = round(anchors)  # override yaml value
         self.model, self.save, self.layers_param = parse_model(deepcopy(self.yaml), ch=[ch], sync_bn=sync_bn)
         self.names = [str(i) for i in range(self.yaml['nc'])]  # default names
-        self.inplace = self.yaml.get('inplace', True)
         # print([x.shape for x in self.forward(torch.zeros(1, ch, 64, 64))])
+
+        # Recompute
+        if opt is not None:
+            if opt.recompute and opt.recompute_layers > 0:
+                for i in range(opt.recompute_layers):
+                    self.model[i].recompute()
+                print(f"Turn on recompute, and the results of the first {opt.recompute_layers} layers "
+                      f"will be recomputed.")
 
         # Build strides, anchors
         m = self.model[-1]  # Detect()
-        if isinstance(m, (Detect, Segment)):
+        if isinstance(m, Detect):
             s = 256  # 2x min stride
-            m.inplace = self.inplace
             # m.stride = torch.tensor([s / x.shape[-2] for x in self.forward(torch.zeros(1, ch, s, s))])  # forward
             m.stride = Tensor(np.array(self.yaml['stride']), ms.int32)
             check_anchor_order(m)
@@ -85,7 +95,7 @@ class Model(nn.Cell):
             # print('Strides: %s' % m.stride.tolist())
 
         # Init weights, biases
-        initialize_weights(self)
+        initialize_weights(self.model)
 
     def construct(self, x, augment=False):
         if augment:
@@ -153,7 +163,7 @@ class Model(nn.Cell):
 if __name__ == '__main__':
     from mindspore import context
     context.set_context(mode=context.GRAPH_MODE, pynative_synchronize=True)
-    cfg = "./config/models/yolov5s.yaml"
+    cfg = "./config/network_yolov5/yolov5.yaml"
     model = Model(cfg, ch=3, nc=80, anchors=None)
     for p in model.trainable_params():
         print(p.name)

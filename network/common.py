@@ -47,19 +47,38 @@ class ResizeNearestNeighbor(nn.Cell):
     def __init__(self, scale=2):
         super(ResizeNearestNeighbor, self).__init__()
         self.scale = scale
+    @ms.ms_function
     def construct(self, x):
         return ops.ResizeNearestNeighbor((x.shape[-2] * 2, x.shape[-1] * 2))(x)
+
+# class Bottleneck(nn.Cell):
+#     # Standard bottleneck
+#     # ch_in, ch_out, shortcut, groups, expansion
+#     def __init__(self, c1, c2, shortcut=True, e=0.5):
+#         super(Bottleneck, self).__init__()
+#         c_ = int(c2 * e)  # hidden channels
+#         self.conv1 = Conv(c1, c_, 1, 1)
+#         self.conv2 = Conv(c_, c2, 3, 1)
+#         self.add = shortcut and c1 == c2
+#     @ms.ms_function
+#     def construct(self, x):
+#         c1 = self.conv1(x)
+#         c2 = self.conv2(c1)
+#         out = c2
+#         if self.add:
+#             out = x + out
+#         return out
 
 class Bottleneck(nn.Cell):
     # Standard bottleneck
     # ch_in, ch_out, shortcut, groups, expansion
-    def __init__(self, c1, c2, shortcut=True, e=0.5):
+    def __init__(self, c1, c2, shortcut=True, g=1, e=0.5):
         super(Bottleneck, self).__init__()
         c_ = int(c2 * e)  # hidden channels
         self.conv1 = Conv(c1, c_, 1, 1)
         self.conv2 = Conv(c_, c2, 3, 1)
         self.add = shortcut and c1 == c2
-
+    @ms.ms_function
     def construct(self, x):
         c1 = self.conv1(x)
         c2 = self.conv2(c1)
@@ -74,45 +93,92 @@ class Concat(nn.Cell):
         super(Concat, self).__init__()
         self.d = dimension
 
+    @ms.ms_function
     def construct(self, x):
         return ops.concat(x, self.d)
 
+# class Conv(nn.Cell):
+#     # Standard convolution
+#     def __init__(self, c1, c2, k=1, s=1, p=None, g=1, d=1, act=True):  # ch_in, ch_out, kernel, stride, padding, groups
+#         super(Conv, self).__init__()
+#         self.conv = nn.Conv2d(c1, c2, k, s,
+#                               pad_mode="pad",
+#                               padding=autopad(k, p, d),
+#                               group=g,
+#                               dilation=d,
+#                               has_bias=False,
+#                               weight_init=HeUniform(negative_slope=5))
+#         if _SYNC_BN:
+#             self.bn = nn.SyncBatchNorm(c2)
+#         else:
+#             self.bn = nn.BatchNorm2d(c2)
+#         self.act = nn.SiLU() if act is True else (act if isinstance(act, nn.Cell) else nn.Identity())
+
+#     def construct(self, x):
+#         return self.act(self.bn(self.conv(x)))
+
+#     def fuseforward(self, x):
+#         return self.act(self.conv(x))
+
 class Conv(nn.Cell):
     # Standard convolution
-    def __init__(self, c1, c2, k=1, s=1, p=None, g=1, d=1, act=True):  # ch_in, ch_out, kernel, stride, padding, groups
+    def __init__(self, c1, c2, k=1, s=1, p=None, g=1, act=True):  # ch_in, ch_out, kernel, stride, padding, groups
         super(Conv, self).__init__()
         self.conv = nn.Conv2d(c1, c2, k, s,
                               pad_mode="pad",
-                              padding=autopad(k, p, d),
+                              padding=autopad(k, p),
                               group=g,
-                              dilation=d,
                               has_bias=False,
                               weight_init=HeUniform(negative_slope=5))
         if _SYNC_BN:
-            self.bn = nn.SyncBatchNorm(c2)
+            self.bn = nn.SyncBatchNorm(c2, momentum=(1 - 0.03), eps=1e-3)
         else:
-            self.bn = nn.BatchNorm2d(c2)
+            self.bn = nn.BatchNorm2d(c2, momentum=(1 - 0.03), eps=1e-3)
         self.act = nn.SiLU() if act is True else (act if isinstance(act, nn.Cell) else nn.Identity())
 
+    @ms.ms_function
     def construct(self, x):
         return self.act(self.bn(self.conv(x)))
 
     def fuseforward(self, x):
         return self.act(self.conv(x))
+    
 
+# class C3(nn.Cell):
+#     # CSP Bottleneck with 3 convolutions
+#     def __init__(self, c1, c2, n=1, shortcut=True, e=0.5):
+#         super(C3, self).__init__()
+#         c_ = int(c2 * e)  # hidden channels
+#         self.conv1 = Conv(c1, c_, 1, 1)
+#         self.conv2 = Conv(c1, c_, 1, 1)
+#         self.conv3 = Conv(2 * c_, c2, 1)  # act=FReLU(c2)
+#         self.m = nn.SequentialCell(
+#             [Bottleneck(c_, c_, shortcut, e=1.0) for _ in range(n)])
+#         self.concat = ops.Concat(axis=1)
+
+#     @ms.ms_function
+#     def construct(self, x):
+#         c1 = self.conv1(x)
+#         c2 = self.m(c1)
+#         c3 = self.conv2(x)
+#         c4 = self.concat((c2, c3))
+#         c5 = self.conv3(c4)
+
+#         return c5
 
 class C3(nn.Cell):
     # CSP Bottleneck with 3 convolutions
-    def __init__(self, c1, c2, n=1, shortcut=True, e=0.5):
+    def __init__(self, c1, c2, n=1, shortcut=True, g=1, e=0.5):
         super(C3, self).__init__()
         c_ = int(c2 * e)  # hidden channels
         self.conv1 = Conv(c1, c_, 1, 1)
         self.conv2 = Conv(c1, c_, 1, 1)
         self.conv3 = Conv(2 * c_, c2, 1)  # act=FReLU(c2)
         self.m = nn.SequentialCell(
-            [Bottleneck(c_, c_, shortcut, e=1.0) for _ in range(n)])
+            [Bottleneck(c_, c_, shortcut, g, e=1.0) for _ in range(n)])
         self.concat = ops.Concat(axis=1)
 
+    @ms.ms_function
     def construct(self, x):
         c1 = self.conv1(x)
         c2 = self.m(c1)
@@ -121,6 +187,8 @@ class C3(nn.Cell):
         c5 = self.conv3(c4)
 
         return c5
+
+
 
 
 class SPPF(nn.Cell):
@@ -135,7 +203,8 @@ class SPPF(nn.Cell):
         self.maxpool2 = nn.MaxPool2d(kernel_size=9, stride=1, pad_mode='same')
         self.maxpool3 = nn.MaxPool2d(kernel_size=13, stride=1, pad_mode='same')
         self.concat = ops.Concat(axis=1)
-
+    
+    @ms.ms_function
     def construct(self, x):
         c1 = self.conv1(x)
         m1 = self.maxpool1(c1)
@@ -152,6 +221,7 @@ class Contract(nn.Cell):
         super().__init__()
         self.gain = gain
 
+    @ms.ms_function
     def construct(self, x):
         b, c, h, w = x.size()  # assert (h / s == 0) and (W / s == 0), 'Indivisible gain'
         s = self.gain
@@ -164,7 +234,8 @@ class Expand(nn.Cell):
     def __init__(self, gain=2):
         super().__init__()
         self.gain = gain
-
+    
+    @ms.ms_function
     def construct(self, x):
         b, c, h, w = x.size()  # assert C / s ** 2 == 0, 'Indivisible gain'
         s = self.gain
@@ -177,72 +248,146 @@ class BaseCell(nn.Cell):
         super(BaseCell, self).__init__()
         self.param = parameter
 
+@ops.constexpr(reuse_result=True)
+def get_convert_matrix():
+    return Tensor(np.array([[1, 0, 1, 0], [0, 1, 0, 1], [-0.5, 0, 0.5, 0], [0, -0.5, 0, 0.5]]),
+                  dtype=ms.float32)
 class Detect(nn.Cell):
-    # stride = None  # strides computed during build
-    # dynamic = False  # force grid reconstruction
-    # export = False  # export mode
 
-    def __init__(self, nc=80, anchors=(), ch=(), inplace=True):  # detection layer
-        super().__init__()
+    # stride = None  # strides computed during build
+    # export = False  # onnx export
+    # end2end = False
+    # include_nms = False
+    # concat = False
+
+    def __init__(self, nc=80, anchors=(), ch=()):  # detection layer
+        super(Detect, self).__init__()
         self.stride = None
-        self.dynamic = False
         self.export = False
+        self.end2end = False
+        self.include_nms = False
+        self.concat = False
 
         self.nc = nc  # number of classes
         self.no = nc + 5  # number of outputs per anchor
         self.nl = len(anchors)  # number of detection layers
         self.na = len(anchors[0]) // 2  # number of anchors
-        self.grid_cell = nn.CellList([BaseCell(ms.Parameter(Tensor(np.zeros(1), ms.float32),
-                                                            requires_grad=False))
-                                      for _ in range(self.nl)])
-        # self.grid = [torch.empty(0) for _ in range(self.nl)]  # init grid
-        self.anchor_grid_cell = nn.CellList([BaseCell(ms.Parameter(Tensor(np.zeros(1), ms.float32),
-                                                            requires_grad=False))
-                                      for _ in range(self.nl)])
-        # self.anchor_grid = [torch.empty(0) for _ in range(self.nl)]  # init anchor grid
+        # self.grid_cell = nn.CellList([BaseCell(ms.Parameter(Tensor(np.zeros(1), ms.float32),
+        #                                                     requires_grad=False))
+        #                               for _ in range(self.nl)])
+        # self.grid = [Tensor(np.zeros(1), ms.float32)] * self.nl  # init grid
         self.anchors = ms.Parameter(Tensor(anchors, ms.float32).view(self.nl, -1, 2),
                                     requires_grad=False) # shape(nl,na,2)
-        # self.register_buffer('anchors', torch.tensor(anchors).float().view(self.nl, -1, 2))  # shape(nl,na,2)
+        self.anchor_grid = ms.Parameter(Tensor(anchors, ms.float32).view(self.nl, 1, -1, 1, 1, 2),
+                                        requires_grad=False) # shape(nl,1,na,1,1,2)
+
         self.m = nn.CellList([nn.Conv2d(x, self.no * self.na, 1,
                                         pad_mode="valid",
                                         has_bias=True,
                                         weight_init=HeUniform(negative_slope=5),
                                         bias_init=_init_bias((self.no * self.na, x, 1, 1))) for x in ch])  # output conv
-        # self.m = nn.ModuleList(nn.Conv2d(x, self.no * self.na, 1) for x in ch)  # output conv
-        self.inplace = inplace  # use inplace ops (e.g. slice assignment)
 
+
+        # self.ia = nn.CellList([ImplicitA(x) for x in ch])
+        # self.im = nn.CellList([ImplicitM(self.no * self.na) for _ in ch])
+
+    @ms.ms_function
     def construct(self, x):
+        z = ()  # inference output
         outs = ()
         for i in range(self.nl):
             out = self.m[i](x[i])  # conv
-            # out = self.im[i](out)
-            bs, _, ny, nx = out.shape  # x(bs,255,20,20) to x(bs,3,20,20,85)
-            out = ops.Transpose()(out.view(bs, self.na, self.no, ny, nx), (0, 1, 3, 4, 2))
+            bs, _, ny, nx = out.shape # (bs,255,20,20)
+            out = ops.Transpose()(out.view(bs, self.na, self.no, ny, nx), (0, 1, 3, 4, 2)) # (bs,3,20,20,85)
+            out = out
             outs += (out,)
 
-            # if not self.training:  # inference
-            #     if self.dynamic or self.grid[i].shape[2:4] != x[i].shape[2:4]:
-            #         self.grid[i], self.anchor_grid[i] = self._make_grid(nx, ny, i)
+            if not self.training:  # inference
+                # grid_i_shape = self.grid_cell[i].param.shape
+                # out_shape = out.shape
+                # if grid_i_shape[2:4] != out_shape[2:4]:
+                #     self.grid_cell[i].param = self._make_grid(nx, ny, self.grid_cell[i].param.dtype)
 
-            #     if isinstance(self, Segment):  # (boxes + masks)
-            #         xy, wh, conf, mask = x[i].split((2, 2, self.nc + 1, self.no - self.nc - 5), 4)
-            #         xy = (xy.sigmoid() * 2 + self.grid[i]) * self.stride[i]  # xy
-            #         wh = (wh.sigmoid() * 2) ** 2 * self.anchor_grid[i]  # wh
-            #         y = torch.cat((xy, wh, conf.sigmoid(), mask), 4)
-            #     else:  # Detect (boxes only)
-            #         xy, wh, conf = x[i].sigmoid().split((2, 2, self.nc + 1), 4)
-            #         xy = (xy * 2 + self.grid[i]) * self.stride[i]  # xy
-            #         wh = (wh * 2) ** 2 * self.anchor_grid[i]  # wh
-            #         y = torch.cat((xy, wh, conf), 4)
-            #     z.append(y.view(bs, self.na * nx * ny, self.no))
+                grid_tensor = self._make_grid(nx, ny, out.dtype)
 
-        return outs
-        # return x if self.training else (torch.cat(z, 1),) if self.export else (torch.cat(z, 1), x)
+                y = ops.Sigmoid()(out)
+                # y[..., 0:2] = (y[..., 0:2] * 2. - 0.5 + self.grid_cell[i].param) * self.stride[i]  # xy
+                y[..., 0:2] = (y[..., 0:2] * 2. - 0.5 + grid_tensor) * self.stride[i]  # xy
+                y[..., 2:4] = (y[..., 2:4] * 2) ** 2 * self.anchor_grid[i]  # wh
+                z += (y.view(bs, -1, self.no),)
 
-    def _make_grid(nx=20, ny=20):
-        yv, xv = ops.meshgrid([mnp.arange(ny), mnp.arange(nx)])
-        return ops.cast(ops.stack((xv, yv), 2).view((1, 1, ny, nx, 2)), ms.float32)
+        # return outs
+        return outs if self.training else (ops.concat(z, 1), outs)
 
+    def fuseforward(self, x):
+        # x = x.copy()  # for profiling
+        z = ()  # inference output
+        self.training |= self.export
+        for i in range(self.nl):
+            x[i] = self.m[i](x[i])  # conv
+            bs, _, ny, nx = x[i].shape  # x(bs,255,20,20) to x(bs,3,20,20,85)
+            x[i] = ops.transpose(x[i].view(bs, self.na, self.no, ny, nx), (0, 1, 3, 4, 2))
+            x[i] = x[i]
+
+            if not self.training:  # inference
+                grid_i_shape = self.grid_cell[i].param.shape
+                x_i_shape = x[i].shape
+                if grid_i_shape[2] != x_i_shape[2] or grid_i_shape[3] != x_i_shape[3]:
+                    self.grid_cell[i].param = self._make_grid(nx, ny, self.grid_cell[i].param.dtype)
+
+                y = ops.Sigmoid()(x[i])
+                y[..., 0:2] = (y[..., 0:2] * 2. - 0.5 + self.grid_cell[i].param) * self.stride[i]  # xy
+                y[..., 2:4] = (y[..., 2:4] * 2) ** 2 * self.anchor_grid[i]  # wh
+                z += (y.view(bs, -1, self.no),)
+
+        if self.training:
+            out = x
+        elif self.end2end:
+            out = ops.concat(z, 1)
+        elif self.include_nms:
+            z = self.convert(z)
+            out = (z,)
+        elif self.concat:
+            out = ops.concat(z, 1)
+        else:
+            out = (ops.concat(z, 1), x)
+
+        return out
+
+    def fuse(self):
+        print("IDetect.fuse")
+        # fuse ImplicitA and Convolution
+        for i in range(len(self.m)):
+            c1, c2, _, _ = self.m[i].weight.shape
+            c1_, c2_, _, _ = self.ia[i].implicit.shape
+            _value = self.m[i].bias + ops.matmul(self.m[i].weight.reshape(c1, c2),
+                                                 self.ia[i].implicit.reshape(c2_, c1_)).squeeze(1)
+            self.m[i].bias = ops.assign(self.m[i].bias, _value)
+
+        # fuse ImplicitM and Convolution
+        for i in range(len(self.m)):
+            c1, c2, _, _ = self.im[i].implicit.shape
+            self.m[i].bias = ops.assign(self.m[i].bias, self.m[i].bias * self.im[i].implicit.reshape(c2))
+            self.m[i].weight = ops.assign(self.m[i].weight, self.m[i].weight * self.im[i].implicit.transpose(0, 1))
+            # self.m[i].bias *= self.im[i].implicit.reshape(c2)
+            # self.m[i].weight *= self.im[i].implicit.transpose(0, 1)
+
+    @staticmethod
+    def _make_grid(nx=20, ny=20, dtype=ms.float32):
+        xv, yv = ops.meshgrid((mnp.arange(ny), mnp.arange(nx)))
+        return ops.cast(ops.stack((xv, yv), 2).view((1, 1, ny, nx, 2)), dtype)
+
+    def convert(self, z):
+        z = ops.concat(z, 1)
+        box = z[:, :, :4]
+        conf = z[:, :, 4:5]
+        score = z[:, :, 5:]
+        score *= conf
+        convert_matrix = get_convert_matrix()
+        box = ops.matmul(box, convert_matrix)
+        return (box, score)
+
+    
 class Proto(nn.Cell):
     # YOLOv5 mask Proto module for segmentation models
     def __init__(self, c1, c_=256, c2=32):  # ch_in, number of protos, number of masks
@@ -295,7 +440,7 @@ def parse_model(d, ch, sync_bn=False):  # model_dict, input_channels(3)
             except:
                 pass
 
-        n = max(round(n * gd), 1) if n > 1 else n  # depth gain
+        n = n_ = max(round(n * gd), 1) if n > 1 else n  # depth gain
         if m in [nn.Conv2d, Conv, C3, SPPF, Bottleneck]:
             c1, c2 = ch[f], args[0]
             if c2 != no:  # if not output
@@ -322,14 +467,12 @@ def parse_model(d, ch, sync_bn=False):  # model_dict, input_channels(3)
         else:
             c2 = ch[f]
 
-        m_ = nn.SequentialCell([m(*args) for _ in range(n)]) if n > 1 else m(*args)
-        
-
+        m_ = nn.SequentialCell(*[m(*args) for _ in range(n)]) if n > 1 else m(*args)
         t = str(m) # module type
         np = sum([x.size for x in m_.get_parameters()])  # number params
         m_.i, m_.f, m_.type, m_.np = i, f, t, np  # attach index, 'from' index, type, number params
         layers_param.append((i, f, t, np))
-        print('%3s%18s%3s%10.0f  %-40s%-30s' % (i, f, n, np, t, args))  # print
+        print('%3s%18s%3s%10.0f  %-40s%-30s' % (i, f, n_, np, t, args))  # print
         save.extend(x % i for x in ([f] if isinstance(f, int) else f) if x != -1)  # append to savelist
         layers.append(m_)
         if i == 0:
@@ -355,6 +498,7 @@ class ModelEMA:
         self.updates = updates  # number of EMA updates
         self.decay = lambda x: decay * (1 - math.exp(-x / 2000))  # decay exponential ramp (to help early epochs)
 
+    @ms.ms_function
     def update(self, model):
         # Update EMA parameters
         self.updates += 1

@@ -3,7 +3,7 @@ import random
 import math
 import numpy as np
 
-from utils.general import xywhn2xyxy, xyxy2xywh, xyn2xy, bbox_ioa, segment2box, resample_segments, LOGGER, check_version, colorstr
+from utils.general import xywhn2xyxy, xyxy2xywh, xyn2xy, bbox_ioa, segment2box, resample_segments
 
 def load_image(self, index):
     # loads 1 image from dataset, returns img, original hw, resized hw
@@ -381,50 +381,3 @@ def pastein(image, labels, sample_labels, sample_images, sample_masks):
                     image[ymin:ymin + r_h, xmin:xmin + r_w] = temp_crop
 
     return labels
-
-class Albumentations:
-    # YOLOv5 Albumentations class (optional, only used if package is installed)
-    def __init__(self, size=640):
-        self.transform = None
-        prefix = colorstr('albumentations: ')
-        try:
-            import albumentations as A
-            check_version(A.__version__, '1.0.3', hard=True)  # version requirement
-
-            T = [
-                A.RandomResizedCrop(height=size, width=size, scale=(0.8, 1.0), ratio=(0.9, 1.11), p=0.0),
-                A.Blur(p=0.01),
-                A.MedianBlur(p=0.01),
-                A.ToGray(p=0.01),
-                A.CLAHE(p=0.01),
-                A.RandomBrightnessContrast(p=0.0),
-                A.RandomGamma(p=0.0),
-                A.ImageCompression(quality_lower=75, p=0.0)]  # transforms
-            self.transform = A.Compose(T, bbox_params=A.BboxParams(format='yolo', label_fields=['class_labels']))
-
-            LOGGER.info(prefix + ', '.join(f'{x}'.replace('always_apply=False, ', '') for x in T if x.p))
-        except ImportError:  # package not installed, skip
-            pass
-        except Exception as e:
-            LOGGER.info(f'{prefix}{e}')
-
-    def __call__(self, im, labels, p=1.0):
-        if self.transform and random.random() < p:
-            new = self.transform(image=im, bboxes=labels[:, 1:], class_labels=labels[:, 0])  # transformed
-            im, labels = new['image'], np.array([[c, *b] for c, b in zip(new['class_labels'], new['bboxes'])])
-        return im, labels
-
-def augment_flip(img, anns, flip_code=0):
-    # flip_code: 1:水平翻转, 0:垂直翻转, -1:水平垂直翻转
-    h, w, _ = img.shape
-    img_change = cv2.flip(img, flipCode=flip_code)
-    anns_change = anns.copy()
-    if flip_code == 1:
-        anns_change[:, 0], anns_change[:, 2] = w - anns_change[:, 2], w - anns_change[:, 0]
-    elif flip_code == 0:
-        anns_change[:, 1], anns_change[:, 3] = h - anns_change[:, 3], h - anns_change[:, 1]
-    else:
-        anns_change[:, 0], anns_change[:, 2] = w - anns_change[:, 2], w - anns_change[:, 0]
-        anns_change[:, 1], anns_change[:, 3] = h - anns_change[:, 3], h - anns_change[:, 1]
-    anns_change = np.int32(anns_change)
-    return img_change, anns_change

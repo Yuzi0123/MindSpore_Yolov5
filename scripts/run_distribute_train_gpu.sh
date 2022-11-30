@@ -1,9 +1,9 @@
 #!/bin/bash
 
 
-if [ $# != 3 ]
+if [ $# != 3 ] && [ $# != 0 ]
 then
-    echo "Usage: sh run_distribute_train_gpu.sh [DATA_CONFIG_PATH] [MODEL_CONFIG_PATH] [HYP_CONFIG_PATH]"
+    echo "Usage: sh run_distribute_train_gpu.sh [CONFIG_PATH] [DATA_PATH] [HYP_PATH]"
 exit 1
 fi
 
@@ -15,30 +15,23 @@ get_real_path(){
   fi
 }
 
-DATA_CONFIG_PATH=$(get_real_path $1)
-MODEL_CONFIG_PATH=$(get_real_path $2)
-HYP_CONFIG_PATH=$(get_real_path $2)
-echo DATA_CONFIG_PATH
-echo MODEL_CONFIG_PATH
-echo HYP_CONFIG_PATH
-
-if [ ! -f $DATA_CONFIG_PATH ]
+if [ $# == 0 ]
 then
-    echo "error: DATA_CONFIG_PATH=$DATA_CONFIG_PATH is not a file"
-exit 1
+  CONFIG_PATH=$"./config/network_yolov7/yolov7.yaml"
+  DATA_PATH=$"./config/data/coco.yaml"
+  HYP_PATH=$"./config/data/hyp.scratch.p5.yaml"
 fi
 
-if [ ! -f $MODEL_CONFIG_PATH ]
+if [ $# == 3 ]
 then
-    echo "error: MODEL_CONFIG_PATH=$MODEL_CONFIG_PATH is not a file"
-exit 1
+  CONFIG_PATH=$(get_real_path $1)
+  DATA_PATH=$(get_real_path $2)
+  HYP_PATH=$(get_real_path $3)
 fi
 
-if [ ! -f $HYP_CONFIG_PATH ]
-then
-    echo "error: HYP_CONFIG_PATH=$HYP_CONFIG_PATH is not a file"
-exit 1
-fi
+echo $CONFIG_PATH
+echo $DATA_PATH
+echo $HYP_PATH
 
 
 export DEVICE_NUM=8
@@ -48,19 +41,25 @@ cp ../*.py ./train_parallel
 cp -r ../config ./train_parallel
 cp -r ../network ./train_parallel
 cp -r ../utils ./train_parallel
+mkdir ./train_parallel/scripts
+cp -r ../scripts/*.sh ./train_parallel/scripts/
 cd ./train_parallel || exit
 env > env.log
 mpirun --allow-run-as-root -n ${DEVICE_NUM} --output-filename log_output --merge-stderr-to-stdout \
 python train.py \
-  --is_distributed True \
-  --device_target GPU \
-  --rank_size 8 \
-  --rank 0 \
-  --batch-size 32 \
-  --data ./config/data/coco.yaml \
-  --img 640 640 \
-  --cfg ./config/models/yolov5s.yaml \
-  --weights '' \
-  --name yolov5s \
-  --hyp ./config/data/hyp.scratch-low.yaml  > log.txt 2>&1 &
+  --ms_strategy="StaticShape" \
+  --ms_amp_level="O0" \
+  --ms_loss_scaler="none" \
+  --ms_loss_scaler_value=1.0 \
+  --ms_optim_loss_scale=1.0 \
+  --ms_grad_sens=1.0 \
+  --overflow_still_update=True \
+  --clip_grad=False \
+  --cfg=$CONFIG_PATH \
+  --data=$DATA_PATH \
+  --hyp=$HYP_PATH \
+  --device_target=GPU \
+  --is_distributed=True \
+  --epochs=300 \
+  --batch-size=192 > log.txt 2>&1 &
 cd ..
