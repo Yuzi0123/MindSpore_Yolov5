@@ -43,42 +43,25 @@ def autopad(k, p=None, d=1):  # kernel, padding, dilation
         p = k // 2 if isinstance(k, int) else [x // 2 for x in k]  # auto-pad
     return p
 
+
 class ResizeNearestNeighbor(nn.Cell):
     def __init__(self, scale=2):
         super(ResizeNearestNeighbor, self).__init__()
         self.scale = scale
-    @ms.ms_function
+    # @ms.ms_function
     def construct(self, x):
         return ops.ResizeNearestNeighbor((x.shape[-2] * 2, x.shape[-1] * 2))(x)
-
-# class Bottleneck(nn.Cell):
-#     # Standard bottleneck
-#     # ch_in, ch_out, shortcut, groups, expansion
-#     def __init__(self, c1, c2, shortcut=True, e=0.5):
-#         super(Bottleneck, self).__init__()
-#         c_ = int(c2 * e)  # hidden channels
-#         self.conv1 = Conv(c1, c_, 1, 1)
-#         self.conv2 = Conv(c_, c2, 3, 1)
-#         self.add = shortcut and c1 == c2
-#     @ms.ms_function
-#     def construct(self, x):
-#         c1 = self.conv1(x)
-#         c2 = self.conv2(c1)
-#         out = c2
-#         if self.add:
-#             out = x + out
-#         return out
 
 class Bottleneck(nn.Cell):
     # Standard bottleneck
     # ch_in, ch_out, shortcut, groups, expansion
-    def __init__(self, c1, c2, shortcut=True, g=1, e=0.5):
+    def __init__(self, c1, c2, shortcut=True, e=0.5):
         super(Bottleneck, self).__init__()
         c_ = int(c2 * e)  # hidden channels
         self.conv1 = Conv(c1, c_, 1, 1)
         self.conv2 = Conv(c_, c2, 3, 1)
         self.add = shortcut and c1 == c2
-    @ms.ms_function
+    # @ms.ms_function
     def construct(self, x):
         c1 = self.conv1(x)
         c2 = self.conv2(c1)
@@ -93,32 +76,10 @@ class Concat(nn.Cell):
         super(Concat, self).__init__()
         self.d = dimension
 
-    @ms.ms_function
+    # @ms.ms_function
     def construct(self, x):
         return ops.concat(x, self.d)
 
-# class Conv(nn.Cell):
-#     # Standard convolution
-#     def __init__(self, c1, c2, k=1, s=1, p=None, g=1, d=1, act=True):  # ch_in, ch_out, kernel, stride, padding, groups
-#         super(Conv, self).__init__()
-#         self.conv = nn.Conv2d(c1, c2, k, s,
-#                               pad_mode="pad",
-#                               padding=autopad(k, p, d),
-#                               group=g,
-#                               dilation=d,
-#                               has_bias=False,
-#                               weight_init=HeUniform(negative_slope=5))
-#         if _SYNC_BN:
-#             self.bn = nn.SyncBatchNorm(c2)
-#         else:
-#             self.bn = nn.BatchNorm2d(c2)
-#         self.act = nn.SiLU() if act is True else (act if isinstance(act, nn.Cell) else nn.Identity())
-
-#     def construct(self, x):
-#         return self.act(self.bn(self.conv(x)))
-
-#     def fuseforward(self, x):
-#         return self.act(self.conv(x))
 
 class Conv(nn.Cell):
     # Standard convolution
@@ -131,54 +92,35 @@ class Conv(nn.Cell):
                               has_bias=False,
                               weight_init=HeUniform(negative_slope=5))
         if _SYNC_BN:
-            self.bn = nn.SyncBatchNorm(c2, momentum=(1 - 0.03), eps=1e-3)
+            self.bn = nn.SyncBatchNorm(c2, momentum=0.1, eps=1e-5)
         else:
-            self.bn = nn.BatchNorm2d(c2, momentum=(1 - 0.03), eps=1e-3)
-        self.act = nn.SiLU() if act is True else (act if isinstance(act, nn.Cell) else nn.Identity())
-
-    @ms.ms_function
+            self.bn = nn.BatchNorm2d(c2, momentum=0.1, eps=1e-3)
+        # self.act = nn.SiLU() if act is True else (act if isinstance(act, nn.Cell) else nn.Identity())
+        self.act = nn.SiLU() if act is True else act if isinstance(act, nn.Cell) else nn.Identity()
+    # @ms.ms_function
     def construct(self, x):
+        tmp = self.act(self.conv(x))
+        # np.save('/data1/lirenda-yolov5s-total/lirenda-yolov5s-doOnV7/yolov7_mindspore_new/yolov5-pytorch/compare_ms_torch/' 
+        #         + self.__class__.__name__, tmp)
         return self.act(self.bn(self.conv(x)))
 
     def fuseforward(self, x):
         return self.act(self.conv(x))
     
 
-# class C3(nn.Cell):
-#     # CSP Bottleneck with 3 convolutions
-#     def __init__(self, c1, c2, n=1, shortcut=True, e=0.5):
-#         super(C3, self).__init__()
-#         c_ = int(c2 * e)  # hidden channels
-#         self.conv1 = Conv(c1, c_, 1, 1)
-#         self.conv2 = Conv(c1, c_, 1, 1)
-#         self.conv3 = Conv(2 * c_, c2, 1)  # act=FReLU(c2)
-#         self.m = nn.SequentialCell(
-#             [Bottleneck(c_, c_, shortcut, e=1.0) for _ in range(n)])
-#         self.concat = ops.Concat(axis=1)
-
-#     @ms.ms_function
-#     def construct(self, x):
-#         c1 = self.conv1(x)
-#         c2 = self.m(c1)
-#         c3 = self.conv2(x)
-#         c4 = self.concat((c2, c3))
-#         c5 = self.conv3(c4)
-
-#         return c5
-
 class C3(nn.Cell):
     # CSP Bottleneck with 3 convolutions
-    def __init__(self, c1, c2, n=1, shortcut=True, g=1, e=0.5):
+    def __init__(self, c1, c2, n=1, shortcut=True, e=0.5):
         super(C3, self).__init__()
         c_ = int(c2 * e)  # hidden channels
         self.conv1 = Conv(c1, c_, 1, 1)
         self.conv2 = Conv(c1, c_, 1, 1)
         self.conv3 = Conv(2 * c_, c2, 1)  # act=FReLU(c2)
         self.m = nn.SequentialCell(
-            [Bottleneck(c_, c_, shortcut, g, e=1.0) for _ in range(n)])
+            [Bottleneck(c_, c_, shortcut, e=1.0) for _ in range(n)])
         self.concat = ops.Concat(axis=1)
 
-    @ms.ms_function
+    # @ms.ms_function
     def construct(self, x):
         c1 = self.conv1(x)
         c2 = self.m(c1)
@@ -187,8 +129,6 @@ class C3(nn.Cell):
         c5 = self.conv3(c4)
 
         return c5
-
-
 
 
 class SPPF(nn.Cell):
@@ -204,7 +144,7 @@ class SPPF(nn.Cell):
         self.maxpool3 = nn.MaxPool2d(kernel_size=13, stride=1, pad_mode='same')
         self.concat = ops.Concat(axis=1)
     
-    @ms.ms_function
+    # @ms.ms_function
     def construct(self, x):
         c1 = self.conv1(x)
         m1 = self.maxpool1(c1)
@@ -221,7 +161,7 @@ class Contract(nn.Cell):
         super().__init__()
         self.gain = gain
 
-    @ms.ms_function
+    # @ms.ms_function
     def construct(self, x):
         b, c, h, w = x.size()  # assert (h / s == 0) and (W / s == 0), 'Indivisible gain'
         s = self.gain
@@ -235,7 +175,7 @@ class Expand(nn.Cell):
         super().__init__()
         self.gain = gain
     
-    @ms.ms_function
+    # @ms.ms_function
     def construct(self, x):
         b, c, h, w = x.size()  # assert C / s ** 2 == 0, 'Indivisible gain'
         s = self.gain
@@ -291,7 +231,7 @@ class Detect(nn.Cell):
         # self.ia = nn.CellList([ImplicitA(x) for x in ch])
         # self.im = nn.CellList([ImplicitM(self.no * self.na) for _ in ch])
 
-    @ms.ms_function
+    # @ms.ms_function
     def construct(self, x):
         z = ()  # inference output
         outs = ()
@@ -440,7 +380,7 @@ def parse_model(d, ch, sync_bn=False):  # model_dict, input_channels(3)
             except:
                 pass
 
-        n = n_ = max(round(n * gd), 1) if n > 1 else n  # depth gain
+        n = max(round(n * gd), 1) if n > 1 else n  # depth gain
         if m in [nn.Conv2d, Conv, C3, SPPF, Bottleneck]:
             c1, c2 = ch[f], args[0]
             if c2 != no:  # if not output
@@ -467,12 +407,14 @@ def parse_model(d, ch, sync_bn=False):  # model_dict, input_channels(3)
         else:
             c2 = ch[f]
 
-        m_ = nn.SequentialCell(*[m(*args) for _ in range(n)]) if n > 1 else m(*args)
+        m_ = nn.SequentialCell([m(*args) for _ in range(n)]) if n > 1 else m(*args)
+        
+
         t = str(m) # module type
         np = sum([x.size for x in m_.get_parameters()])  # number params
         m_.i, m_.f, m_.type, m_.np = i, f, t, np  # attach index, 'from' index, type, number params
         layers_param.append((i, f, t, np))
-        print('%3s%18s%3s%10.0f  %-40s%-30s' % (i, f, n_, np, t, args))  # print
+        print('%3s%18s%3s%10.0f  %-40s%-30s' % (i, f, n, np, t, args))  # print
         save.extend(x % i for x in ([f] if isinstance(f, int) else f) if x != -1)  # append to savelist
         layers.append(m_)
         if i == 0:
@@ -481,7 +423,48 @@ def parse_model(d, ch, sync_bn=False):  # model_dict, input_channels(3)
     return nn.CellList(layers), sorted(save), layers_param
 
 
-class ModelEMA:
+# class ModelEMA:
+#     """ Model Exponential Moving Average from https://github.com/rwightman/pytorch-image-models
+#     Keep a moving average of everything in the model state_dict (parameters and buffers).
+#     This is intended to allow functionality like
+#     https://www.tensorflow.org/api_docs/python/tf/train/ExponentialMovingAverage
+#     A smoothed version of the weights is necessary for some training schemes to perform well.
+#     This class is sensitive where it is initialized in the sequence of model init,
+#     GPU assignment and distributed training wrappers.
+#     """
+
+#     def __init__(self, model, decay=0.9999, updates=0):
+#         # Create EMA
+#         model.set_train(False)
+#         self.ema_model = model
+#         self.updates = updates  # number of EMA updates
+#         self.decay = lambda x: decay * (1 - math.exp(-x / 2000))  # decay exponential ramp (to help early epochs)
+
+#     # @ms.ms_function
+#     def update(self, model):
+#         # Update EMA parameters
+#         self.updates += 1
+#         d = self.decay(self.updates)
+
+#         train_parameters = model.parameters_dict()
+#         for k, v in self.ema_model.parameters_dict():
+#             v_np = v.asnumpy()
+#             v_np *= d
+#             v_np += (1. - d) * train_parameters[k].asnumpy()
+#             v.set_data(Tensor(v_np, v.dtype))
+
+#     def copy_attr(self, a, b, include=(), exclude=()):
+#         # Copy attributes from b to a, options to only include [...] and to exclude [...]
+#         for k, v in b.__dict__.items():
+#             if (len(include) and k not in include) or k.startswith('_') or k in exclude:
+#                 continue
+#             else:
+#                 setattr(a, k, v)
+
+#     def update_attr(self, model, include=(), exclude=('process_group', 'reducer')):
+#         # Update EMA attributes
+#         self.copy_attr(self.ema_model, model, include, exclude)
+class EMA(nn.Cell):
     """ Model Exponential Moving Average from https://github.com/rwightman/pytorch-image-models
     Keep a moving average of everything in the model state_dict (parameters and buffers).
     This is intended to allow functionality like
@@ -492,33 +475,43 @@ class ModelEMA:
     """
 
     def __init__(self, model, decay=0.9999, updates=0):
+        super(EMA, self).__init__()
         # Create EMA
-        model.set_train(False)
-        self.ema_model = model
-        self.updates = updates  # number of EMA updates
-        self.decay = lambda x: decay * (1 - math.exp(-x / 2000))  # decay exponential ramp (to help early epochs)
+        self.weights = ms.ParameterTuple(model.trainable_params())
+        self.ema_weights = self.weights.clone("ema", init='same')
+        self.updates = ms.Parameter(Tensor(updates, ms.float32), requires_grad=False)  # number of EMA updates
+        self.decay_value = decay
+        self.assign = ops.Assign()
+        # self.decay = lambda x: decay * (1 - math.exp(-x / 2000))  # decay exponential ramp (to help early epochs)
+
+    def decay(self, x):
+        return self.decay_value * (1 - ops.exp(ops.neg(x) / 2000))
 
     @ms.ms_function
-    def update(self, model):
+    def update(self):
         # Update EMA parameters
         self.updates += 1
-        d = self.decay(self.updates)
+        # d = self.decay(self.updates)
+        d = self.decay_value * (1 - ops.Exp()(-self.updates / 2000))
 
-        train_parameters = model.parameters_dict()
-        for k, v in self.ema_model.parameters_dict():
-            v_np = v.asnumpy()
-            v_np *= d
-            v_np += (1. - d) * train_parameters[k].asnumpy()
-            v.set_data(Tensor(v_np, v.dtype))
+        for ema_v, weight in zip(self.ema_weights, self.weights):
+            tep_v = ema_v * d
+            self.assign(ema_v, weight * (1. - d) + tep_v)
 
-    def copy_attr(self, a, b, include=(), exclude=()):
-        # Copy attributes from b to a, options to only include [...] and to exclude [...]
-        for k, v in b.__dict__.items():
-            if (len(include) and k not in include) or k.startswith('_') or k in exclude:
-                continue
-            else:
-                setattr(a, k, v)
+        return self.updates
 
-    def update_attr(self, model, include=(), exclude=('process_group', 'reducer')):
-        # Update EMA attributes
-        self.copy_attr(self.ema_model, model, include, exclude)
+    def clone_from_model(self):
+        for ema_v, weight in zip(self.ema_weights, self.weights):
+            self.assign(ema_v, weight)
+
+    # def copy_attr(self, a, b, include=(), exclude=()):
+    #     # Copy attributes from b to a, options to only include [...] and to exclude [...]
+    #     for k, v in b.__dict__.items():
+    #         if (len(include) and k not in include) or k.startswith('_') or k in exclude:
+    #             continue
+    #         else:
+    #             setattr(a, k, v)
+    #
+    # def update_attr(self, model, include=(), exclude=('process_group', 'reducer')):
+    #     # Update EMA attributes
+    #     self.copy_attr(self.ema_model, model, include, exclude)

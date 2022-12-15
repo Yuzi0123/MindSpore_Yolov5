@@ -21,7 +21,7 @@ from mindspore.dataset import vision
 from mindspore.dataset.vision import Inter
 
 from utils.general import segments2boxes, xywhn2xyxy, xyxy2xywh
-from utils.augumentations import load_image, load_mosaic, letterbox, random_perspective, \
+from utils.augumentations import load_image, load_mosaic, load_mosaic9, letterbox, random_perspective, \
     augment_hsv, pastein, load_samples
 
 # Parameters
@@ -245,13 +245,19 @@ class LoadImagesAndLabels:  # for training/testing
         mosaic = self.mosaic and random.random() < hyp['mosaic']
         if mosaic:
             # Load mosaic
-            img, labels = load_mosaic(self, index)
+            if random.random() < 0.8:
+                img, labels = load_mosaic(self, index)
+            else:
+                img, labels = load_mosaic9(self, index)
             # shapes = None
             shapes = np.zeros((3, 2))
 
             # MixUp https://arxiv.org/pdf/1710.09412.pdf
             if random.random() < hyp['mixup']:
-                img2, labels2 = load_mosaic(self, random.randint(0, len(self.labels) - 1))
+                if random.random() < 0.8:
+                    img2, labels2 = load_mosaic(self, random.randint(0, len(self.labels) - 1))
+                else:
+                    img2, labels2 = load_mosaic9(self, random.randint(0, len(self.labels) - 1))
                 r = np.random.beta(8.0, 8.0)  # mixup ratio, alpha=beta=8.0
                 img = (img * r + img2 * (1 - r)).astype(np.uint8)
                 labels = np.concatenate((labels, labels2), 0)
@@ -291,7 +297,7 @@ class LoadImagesAndLabels:  # for training/testing
             # if random.random() < 0.9:
             #     labels = cutout(img, labels)
 
-            if random.random() < 0.5:
+            if random.random() < hyp['paste_in']:
                 sample_labels, sample_images, sample_masks = [], [], []
                 while len(sample_labels) < 30:
                     sample_labels_, sample_images_, sample_masks_ = \

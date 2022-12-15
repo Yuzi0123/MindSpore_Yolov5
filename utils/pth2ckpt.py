@@ -21,7 +21,7 @@ from mindspore import Tensor
 def pytorch2mindspore(weight, is_model=False):
     torch_pth = weight
     new_params_list = []
-    par_dict = torch.load(torch_pth, map_location='cuda:0')
+    par_dict = torch.load(torch_pth, map_location='cpu')
     if is_model:
         par_dict = par_dict["model"].state_dict()
     for k in par_dict.keys():
@@ -118,9 +118,9 @@ def mindspore2pytorch(weight):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(prog='test.py')
+    parser = argparse.ArgumentParser(prog='pth2ckpt.py')
     parser.add_argument('--convert_mode', type=str, default='torch2ms', help='train mode, torch2ms/ms2torch')
-    parser.add_argument('--weight', type=str, default='/home/data/lurj22/mindspore/yolov7_mindspore-zhy/yolov7.pt', help='source checkpoint file')
+    parser.add_argument('--weight', type=str, default='./yolov7_official.pt', help='source checkpoint file')
     parser.add_argument('--is_model', type=ast.literal_eval, default=False, help='Distribute train or not')
     opt = parser.parse_args()
 

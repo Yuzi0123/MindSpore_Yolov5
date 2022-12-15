@@ -1,0 +1,858 @@
+# 1.This file shows the parsed IR info when graph evaluating failed to help find the problem.
+# 2.You can search the last `------------------------>` to the node which is inferred failed.
+# 3.Refer to https://www.mindspore.cn/search?inputValue=analyze_fail.dat to get more instructions.
+# ===============================================================================
+
+# [No.1] train_step.21
+# In file train.py:684/    def train_step(x, label, sizes=None, optimizer_update=True):/
+funcgraph fg_21(
+        %para1 : Tensor(F32)[32, 3, 640, 640]    # x
+        , %para2 : Tensor(F32)[32, 160, 6]    # label
+        , %para3 : NoneTypeNoShape    # sizes
+        , %para4 : BoolNoShape    # optimizer_update
+        , %para5 : Ref[Tensor(F32)][]    # scale_value
+        , %para6 : Ref[Tensor(F32)][32]    # model.0.bn.gamma
+        , %para7 : Ref[Tensor(F32)][64]    # model.1.bn.gamma
+        , %para8 : Ref[Tensor(F32)][32]    # model.2.conv1.bn.gamma
+        , %para9 : Ref[Tensor(F32)][32]    # model.2.conv2.bn.gamma
+        , %para10 : Ref[Tensor(F32)][64]    # model.2.conv3.bn.gamma
+        , %para11 : Ref[Tensor(F32)][32]    # model.2.m.0.conv1.bn.gamma
+        , %para12 : Ref[Tensor(F32)][32]    # model.2.m.0.conv2.bn.gamma
+        , %para13 : Ref[Tensor(F32)][128]    # model.3.bn.gamma
+        , %para14 : Ref[Tensor(F32)][64]    # model.4.conv1.bn.gamma
+        , %para15 : Ref[Tensor(F32)][64]    # model.4.conv2.bn.gamma
+        , %para16 : Ref[Tensor(F32)][128]    # model.4.conv3.bn.gamma
+        , %para17 : Ref[Tensor(F32)][64]    # model.4.m.0.conv1.bn.gamma
+        , %para18 : Ref[Tensor(F32)][64]    # model.4.m.0.conv2.bn.gamma
+        , %para19 : Ref[Tensor(F32)][64]    # model.4.m.1.conv1.bn.gamma
+        , %para20 : Ref[Tensor(F32)][64]    # model.4.m.1.conv2.bn.gamma
+        , %para21 : Ref[Tensor(F32)][256]    # model.5.bn.gamma
+        , %para22 : Ref[Tensor(F32)][128]    # model.6.conv1.bn.gamma
+        , %para23 : Ref[Tensor(F32)][128]    # model.6.conv2.bn.gamma
+        , %para24 : Ref[Tensor(F32)][256]    # model.6.conv3.bn.gamma
+        , %para25 : Ref[Tensor(F32)][128]    # model.6.m.0.conv1.bn.gamma
+        , %para26 : Ref[Tensor(F32)][128]    # model.6.m.0.conv2.bn.gamma
+        , %para27 : Ref[Tensor(F32)][128]    # model.6.m.1.conv1.bn.gamma
+        , %para28 : Ref[Tensor(F32)][128]    # model.6.m.1.conv2.bn.gamma
+        , %para29 : Ref[Tensor(F32)][128]    # model.6.m.2.conv1.bn.gamma
+        , %para30 : Ref[Tensor(F32)][128]    # model.6.m.2.conv2.bn.gamma
+        , %para31 : Ref[Tensor(F32)][512]    # model.7.bn.gamma
+        , %para32 : Ref[Tensor(F32)][256]    # model.8.conv1.bn.gamma
+        , %para33 : Ref[Tensor(F32)][256]    # model.8.conv2.bn.gamma
+        , %para34 : Ref[Tensor(F32)][512]    # model.8.conv3.bn.gamma
+        , %para35 : Ref[Tensor(F32)][256]    # model.8.m.0.conv1.bn.gamma
+        , %para36 : Ref[Tensor(F32)][256]    # model.8.m.0.conv2.bn.gamma
+        , %para37 : Ref[Tensor(F32)][256]    # model.9.conv1.bn.gamma
+        , %para38 : Ref[Tensor(F32)][512]    # model.9.conv2.bn.gamma
+        , %para39 : Ref[Tensor(F32)][256]    # model.10.bn.gamma
+        , %para40 : Ref[Tensor(F32)][128]    # model.13.conv1.bn.gamma
+        , %para41 : Ref[Tensor(F32)][128]    # model.13.conv2.bn.gamma
+        , %para42 : Ref[Tensor(F32)][256]    # model.13.conv3.bn.gamma
+        , %para43 : Ref[Tensor(F32)][128]    # model.13.m.0.conv1.bn.gamma
+        , %para44 : Ref[Tensor(F32)][128]    # model.13.m.0.conv2.bn.gamma
+        , %para45 : Ref[Tensor(F32)][128]    # model.14.bn.gamma
+        , %para46 : Ref[Tensor(F32)][64]    # model.17.conv1.bn.gamma
+        , %para47 : Ref[Tensor(F32)][64]    # model.17.conv2.bn.gamma
+        , %para48 : Ref[Tensor(F32)][128]    # model.17.conv3.bn.gamma
+        , %para49 : Ref[Tensor(F32)][64]    # model.17.m.0.conv1.bn.gamma
+        , %para50 : Ref[Tensor(F32)][64]    # model.17.m.0.conv2.bn.gamma
+        , %para51 : Ref[Tensor(F32)][128]    # model.18.bn.gamma
+        , %para52 : Ref[Tensor(F32)][128]    # model.20.conv1.bn.gamma
+        , %para53 : Ref[Tensor(F32)][128]    # model.20.conv2.bn.gamma
+        , %para54 : Ref[Tensor(F32)][256]    # model.20.conv3.bn.gamma
+        , %para55 : Ref[Tensor(F32)][128]    # model.20.m.0.conv1.bn.gamma
+        , %para56 : Ref[Tensor(F32)][128]    # model.20.m.0.conv2.bn.gamma
+        , %para57 : Ref[Tensor(F32)][256]    # model.21.bn.gamma
+        , %para58 : Ref[Tensor(F32)][256]    # model.23.conv1.bn.gamma
+        , %para59 : Ref[Tensor(F32)][256]    # model.23.conv2.bn.gamma
+        , %para60 : Ref[Tensor(F32)][512]    # model.23.conv3.bn.gamma
+        , %para61 : Ref[Tensor(F32)][256]    # model.23.m.0.conv1.bn.gamma
+        , %para62 : Ref[Tensor(F32)][256]    # model.23.m.0.conv2.bn.gamma
+        , %para63 : Ref[Tensor(F32)][32, 3, 6, 6]    # model.0.conv.weight
+        , %para64 : Ref[Tensor(F32)][64, 32, 3, 3]    # model.1.conv.weight
+        , %para65 : Ref[Tensor(F32)][32, 64, 1, 1]    # model.2.conv1.conv.weight
+        , %para66 : Ref[Tensor(F32)][32, 64, 1, 1]    # model.2.conv2.conv.weight
+        , %para67 : Ref[Tensor(F32)][64, 64, 1, 1]    # model.2.conv3.conv.weight
+        , %para68 : Ref[Tensor(F32)][32, 32, 1, 1]    # model.2.m.0.conv1.conv.weight
+        , %para69 : Ref[Tensor(F32)][32, 32, 3, 3]    # model.2.m.0.conv2.conv.weight
+        , %para70 : Ref[Tensor(F32)][128, 64, 3, 3]    # model.3.conv.weight
+        , %para71 : Ref[Tensor(F32)][64, 128, 1, 1]    # model.4.conv1.conv.weight
+        , %para72 : Ref[Tensor(F32)][64, 128, 1, 1]    # model.4.conv2.conv.weight
+        , %para73 : Ref[Tensor(F32)][128, 128, 1, 1]    # model.4.conv3.conv.weight
+        , %para74 : Ref[Tensor(F32)][64, 64, 1, 1]    # model.4.m.0.conv1.conv.weight
+        , %para75 : Ref[Tensor(F32)][64, 64, 3, 3]    # model.4.m.0.conv2.conv.weight
+        , %para76 : Ref[Tensor(F32)][64, 64, 1, 1]    # model.4.m.1.conv1.conv.weight
+        , %para77 : Ref[Tensor(F32)][64, 64, 3, 3]    # model.4.m.1.conv2.conv.weight
+        , %para78 : Ref[Tensor(F32)][256, 128, 3, 3]    # model.5.conv.weight
+        , %para79 : Ref[Tensor(F32)][128, 256, 1, 1]    # model.6.conv1.conv.weight
+        , %para80 : Ref[Tensor(F32)][128, 256, 1, 1]    # model.6.conv2.conv.weight
+        , %para81 : Ref[Tensor(F32)][256, 256, 1, 1]    # model.6.conv3.conv.weight
+        , %para82 : Ref[Tensor(F32)][128, 128, 1, 1]    # model.6.m.0.conv1.conv.weight
+        , %para83 : Ref[Tensor(F32)][128, 128, 3, 3]    # model.6.m.0.conv2.conv.weight
+        , %para84 : Ref[Tensor(F32)][128, 128, 1, 1]    # model.6.m.1.conv1.conv.weight
+        , %para85 : Ref[Tensor(F32)][128, 128, 3, 3]    # model.6.m.1.conv2.conv.weight
+        , %para86 : Ref[Tensor(F32)][128, 128, 1, 1]    # model.6.m.2.conv1.conv.weight
+        , %para87 : Ref[Tensor(F32)][128, 128, 3, 3]    # model.6.m.2.conv2.conv.weight
+        , %para88 : Ref[Tensor(F32)][512, 256, 3, 3]    # model.7.conv.weight
+        , %para89 : Ref[Tensor(F32)][256, 512, 1, 1]    # model.8.conv1.conv.weight
+        , %para90 : Ref[Tensor(F32)][256, 512, 1, 1]    # model.8.conv2.conv.weight
+        , %para91 : Ref[Tensor(F32)][512, 512, 1, 1]    # model.8.conv3.conv.weight
+        , %para92 : Ref[Tensor(F32)][256, 256, 1, 1]    # model.8.m.0.conv1.conv.weight
+        , %para93 : Ref[Tensor(F32)][256, 256, 3, 3]    # model.8.m.0.conv2.conv.weight
+        , %para94 : Ref[Tensor(F32)][256, 512, 1, 1]    # model.9.conv1.conv.weight
+        , %para95 : Ref[Tensor(F32)][512, 1024, 1, 1]    # model.9.conv2.conv.weight
+        , %para96 : Ref[Tensor(F32)][256, 512, 1, 1]    # model.10.conv.weight
+        , %para97 : Ref[Tensor(F32)][128, 512, 1, 1]    # model.13.conv1.conv.weight
+        , %para98 : Ref[Tensor(F32)][128, 512, 1, 1]    # model.13.conv2.conv.weight
+        , %para99 : Ref[Tensor(F32)][256, 256, 1, 1]    # model.13.conv3.conv.weight
+        , %para100 : Ref[Tensor(F32)][128, 128, 1, 1]    # model.13.m.0.conv1.conv.weight
+        , %para101 : Ref[Tensor(F32)][128, 128, 3, 3]    # model.13.m.0.conv2.conv.weight
+        , %para102 : Ref[Tensor(F32)][128, 256, 1, 1]    # model.14.conv.weight
+        , %para103 : Ref[Tensor(F32)][64, 256, 1, 1]    # model.17.conv1.conv.weight
+        , %para104 : Ref[Tensor(F32)][64, 256, 1, 1]    # model.17.conv2.conv.weight
+        , %para105 : Ref[Tensor(F32)][128, 128, 1, 1]    # model.17.conv3.conv.weight
+        , %para106 : Ref[Tensor(F32)][64, 64, 1, 1]    # model.17.m.0.conv1.conv.weight
+        , %para107 : Ref[Tensor(F32)][64, 64, 3, 3]    # model.17.m.0.conv2.conv.weight
+        , %para108 : Ref[Tensor(F32)][128, 128, 3, 3]    # model.18.conv.weight
+        , %para109 : Ref[Tensor(F32)][128, 256, 1, 1]    # model.20.conv1.conv.weight
+        , %para110 : Ref[Tensor(F32)][128, 256, 1, 1]    # model.20.conv2.conv.weight
+        , %para111 : Ref[Tensor(F32)][256, 256, 1, 1]    # model.20.conv3.conv.weight
+        , %para112 : Ref[Tensor(F32)][128, 128, 1, 1]    # model.20.m.0.conv1.conv.weight
+        , %para113 : Ref[Tensor(F32)][128, 128, 3, 3]    # model.20.m.0.conv2.conv.weight
+        , %para114 : Ref[Tensor(F32)][256, 256, 3, 3]    # model.21.conv.weight
+        , %para115 : Ref[Tensor(F32)][256, 512, 1, 1]    # model.23.conv1.conv.weight
+        , %para116 : Ref[Tensor(F32)][256, 512, 1, 1]    # model.23.conv2.conv.weight
+        , %para117 : Ref[Tensor(F32)][512, 512, 1, 1]    # model.23.conv3.conv.weight
+        , %para118 : Ref[Tensor(F32)][256, 256, 1, 1]    # model.23.m.0.conv1.conv.weight
+        , %para119 : Ref[Tensor(F32)][256, 256, 3, 3]    # model.23.m.0.conv2.conv.weight
+        , %para120 : Ref[Tensor(F32)][255, 128, 1, 1]    # model.24.m.0.weight
+        , %para121 : Ref[Tensor(F32)][255, 256, 1, 1]    # model.24.m.1.weight
+        , %para122 : Ref[Tensor(F32)][255, 512, 1, 1]    # model.24.m.2.weight
+        , %para123 : Ref[Tensor(F32)][32]    # model.0.bn.beta
+        , %para124 : Ref[Tensor(F32)][64]    # model.1.bn.beta
+        , %para125 : Ref[Tensor(F32)][32]    # model.2.conv1.bn.beta
+        , %para126 : Ref[Tensor(F32)][32]    # model.2.conv2.bn.beta
+        , %para127 : Ref[Tensor(F32)][64]    # model.2.conv3.bn.beta
+        , %para128 : Ref[Tensor(F32)][32]    # model.2.m.0.conv1.bn.beta
+        , %para129 : Ref[Tensor(F32)][32]    # model.2.m.0.conv2.bn.beta
+        , %para130 : Ref[Tensor(F32)][128]    # model.3.bn.beta
+        , %para131 : Ref[Tensor(F32)][64]    # model.4.conv1.bn.beta
+        , %para132 : Ref[Tensor(F32)][64]    # model.4.conv2.bn.beta
+        , %para133 : Ref[Tensor(F32)][128]    # model.4.conv3.bn.beta
+        , %para134 : Ref[Tensor(F32)][64]    # model.4.m.0.conv1.bn.beta
+        , %para135 : Ref[Tensor(F32)][64]    # model.4.m.0.conv2.bn.beta
+        , %para136 : Ref[Tensor(F32)][64]    # model.4.m.1.conv1.bn.beta
+        , %para137 : Ref[Tensor(F32)][64]    # model.4.m.1.conv2.bn.beta
+        , %para138 : Ref[Tensor(F32)][256]    # model.5.bn.beta
+        , %para139 : Ref[Tensor(F32)][128]    # model.6.conv1.bn.beta
+        , %para140 : Ref[Tensor(F32)][128]    # model.6.conv2.bn.beta
+        , %para141 : Ref[Tensor(F32)][256]    # model.6.conv3.bn.beta
+        , %para142 : Ref[Tensor(F32)][128]    # model.6.m.0.conv1.bn.beta
+        , %para143 : Ref[Tensor(F32)][128]    # model.6.m.0.conv2.bn.beta
+        , %para144 : Ref[Tensor(F32)][128]    # model.6.m.1.conv1.bn.beta
+        , %para145 : Ref[Tensor(F32)][128]    # model.6.m.1.conv2.bn.beta
+        , %para146 : Ref[Tensor(F32)][128]    # model.6.m.2.conv1.bn.beta
+        , %para147 : Ref[Tensor(F32)][128]    # model.6.m.2.conv2.bn.beta
+        , %para148 : Ref[Tensor(F32)][512]    # model.7.bn.beta
+        , %para149 : Ref[Tensor(F32)][256]    # model.8.conv1.bn.beta
+        , %para150 : Ref[Tensor(F32)][256]    # model.8.conv2.bn.beta
+        , %para151 : Ref[Tensor(F32)][512]    # model.8.conv3.bn.beta
+        , %para152 : Ref[Tensor(F32)][256]    # model.8.m.0.conv1.bn.beta
+        , %para153 : Ref[Tensor(F32)][256]    # model.8.m.0.conv2.bn.beta
+        , %para154 : Ref[Tensor(F32)][256]    # model.9.conv1.bn.beta
+        , %para155 : Ref[Tensor(F32)][512]    # model.9.conv2.bn.beta
+        , %para156 : Ref[Tensor(F32)][256]    # model.10.bn.beta
+        , %para157 : Ref[Tensor(F32)][128]    # model.13.conv1.bn.beta
+        , %para158 : Ref[Tensor(F32)][128]    # model.13.conv2.bn.beta
+        , %para159 : Ref[Tensor(F32)][256]    # model.13.conv3.bn.beta
+        , %para160 : Ref[Tensor(F32)][128]    # model.13.m.0.conv1.bn.beta
+        , %para161 : Ref[Tensor(F32)][128]    # model.13.m.0.conv2.bn.beta
+        , %para162 : Ref[Tensor(F32)][128]    # model.14.bn.beta
+        , %para163 : Ref[Tensor(F32)][64]    # model.17.conv1.bn.beta
+        , %para164 : Ref[Tensor(F32)][64]    # model.17.conv2.bn.beta
+        , %para165 : Ref[Tensor(F32)][128]    # model.17.conv3.bn.beta
+        , %para166 : Ref[Tensor(F32)][64]    # model.17.m.0.conv1.bn.beta
+        , %para167 : Ref[Tensor(F32)][64]    # model.17.m.0.conv2.bn.beta
+        , %para168 : Ref[Tensor(F32)][128]    # model.18.bn.beta
+        , %para169 : Ref[Tensor(F32)][128]    # model.20.conv1.bn.beta
+        , %para170 : Ref[Tensor(F32)][128]    # model.20.conv2.bn.beta
+        , %para171 : Ref[Tensor(F32)][256]    # model.20.conv3.bn.beta
+        , %para172 : Ref[Tensor(F32)][128]    # model.20.m.0.conv1.bn.beta
+        , %para173 : Ref[Tensor(F32)][128]    # model.20.m.0.conv2.bn.beta
+        , %para174 : Ref[Tensor(F32)][256]    # model.21.bn.beta
+        , %para175 : Ref[Tensor(F32)][256]    # model.23.conv1.bn.beta
+        , %para176 : Ref[Tensor(F32)][256]    # model.23.conv2.bn.beta
+        , %para177 : Ref[Tensor(F32)][512]    # model.23.conv3.bn.beta
+        , %para178 : Ref[Tensor(F32)][256]    # model.23.m.0.conv1.bn.beta
+        , %para179 : Ref[Tensor(F32)][256]    # model.23.m.0.conv2.bn.beta
+        , %para180 : Ref[Tensor(F32)][255]    # model.24.m.0.bias
+        , %para181 : Ref[Tensor(F32)][255]    # model.24.m.1.bias
+        , %para182 : Ref[Tensor(F32)][255]    # model.24.m.2.bias
+        , %para183 : Ref[Tensor(F32)][32]    # accum.model.0.bn.gamma
+        , %para184 : Ref[Tensor(F32)][64]    # accum.model.1.bn.gamma
+        , %para185 : Ref[Tensor(F32)][32]    # accum.model.2.conv1.bn.gamma
+        , %para186 : Ref[Tensor(F32)][32]    # accum.model.2.conv2.bn.gamma
+        , %para187 : Ref[Tensor(F32)][64]    # accum.model.2.conv3.bn.gamma
+        , %para188 : Ref[Tensor(F32)][32]    # accum.model.2.m.0.conv1.bn.gamma
+        , %para189 : Ref[Tensor(F32)][32]    # accum.model.2.m.0.conv2.bn.gamma
+        , %para190 : Ref[Tensor(F32)][128]    # accum.model.3.bn.gamma
+        , %para191 : Ref[Tensor(F32)][64]    # accum.model.4.conv1.bn.gamma
+        , %para192 : Ref[Tensor(F32)][64]    # accum.model.4.conv2.bn.gamma
+        , %para193 : Ref[Tensor(F32)][128]    # accum.model.4.conv3.bn.gamma
+        , %para194 : Ref[Tensor(F32)][64]    # accum.model.4.m.0.conv1.bn.gamma
+        , %para195 : Ref[Tensor(F32)][64]    # accum.model.4.m.0.conv2.bn.gamma
+        , %para196 : Ref[Tensor(F32)][64]    # accum.model.4.m.1.conv1.bn.gamma
+        , %para197 : Ref[Tensor(F32)][64]    # accum.model.4.m.1.conv2.bn.gamma
+        , %para198 : Ref[Tensor(F32)][256]    # accum.model.5.bn.gamma
+        , %para199 : Ref[Tensor(F32)][128]    # accum.model.6.conv1.bn.gamma
+        , %para200 : Ref[Tensor(F32)][128]    # accum.model.6.conv2.bn.gamma
+        , %para201 : Ref[Tensor(F32)][256]    # accum.model.6.conv3.bn.gamma
+        , %para202 : Ref[Tensor(F32)][128]    # accum.model.6.m.0.conv1.bn.gamma
+        , %para203 : Ref[Tensor(F32)][128]    # accum.model.6.m.0.conv2.bn.gamma
+        , %para204 : Ref[Tensor(F32)][128]    # accum.model.6.m.1.conv1.bn.gamma
+        , %para205 : Ref[Tensor(F32)][128]    # accum.model.6.m.1.conv2.bn.gamma
+        , %para206 : Ref[Tensor(F32)][128]    # accum.model.6.m.2.conv1.bn.gamma
+        , %para207 : Ref[Tensor(F32)][128]    # accum.model.6.m.2.conv2.bn.gamma
+        , %para208 : Ref[Tensor(F32)][512]    # accum.model.7.bn.gamma
+        , %para209 : Ref[Tensor(F32)][256]    # accum.model.8.conv1.bn.gamma
+        , %para210 : Ref[Tensor(F32)][256]    # accum.model.8.conv2.bn.gamma
+        , %para211 : Ref[Tensor(F32)][512]    # accum.model.8.conv3.bn.gamma
+        , %para212 : Ref[Tensor(F32)][256]    # accum.model.8.m.0.conv1.bn.gamma
+        , %para213 : Ref[Tensor(F32)][256]    # accum.model.8.m.0.conv2.bn.gamma
+        , %para214 : Ref[Tensor(F32)][256]    # accum.model.9.conv1.bn.gamma
+        , %para215 : Ref[Tensor(F32)][512]    # accum.model.9.conv2.bn.gamma
+        , %para216 : Ref[Tensor(F32)][256]    # accum.model.10.bn.gamma
+        , %para217 : Ref[Tensor(F32)][128]    # accum.model.13.conv1.bn.gamma
+        , %para218 : Ref[Tensor(F32)][128]    # accum.model.13.conv2.bn.gamma
+        , %para219 : Ref[Tensor(F32)][256]    # accum.model.13.conv3.bn.gamma
+        , %para220 : Ref[Tensor(F32)][128]    # accum.model.13.m.0.conv1.bn.gamma
+        , %para221 : Ref[Tensor(F32)][128]    # accum.model.13.m.0.conv2.bn.gamma
+        , %para222 : Ref[Tensor(F32)][128]    # accum.model.14.bn.gamma
+        , %para223 : Ref[Tensor(F32)][64]    # accum.model.17.conv1.bn.gamma
+        , %para224 : Ref[Tensor(F32)][64]    # accum.model.17.conv2.bn.gamma
+        , %para225 : Ref[Tensor(F32)][128]    # accum.model.17.conv3.bn.gamma
+        , %para226 : Ref[Tensor(F32)][64]    # accum.model.17.m.0.conv1.bn.gamma
+        , %para227 : Ref[Tensor(F32)][64]    # accum.model.17.m.0.conv2.bn.gamma
+        , %para228 : Ref[Tensor(F32)][128]    # accum.model.18.bn.gamma
+        , %para229 : Ref[Tensor(F32)][128]    # accum.model.20.conv1.bn.gamma
+        , %para230 : Ref[Tensor(F32)][128]    # accum.model.20.conv2.bn.gamma
+        , %para231 : Ref[Tensor(F32)][256]    # accum.model.20.conv3.bn.gamma
+        , %para232 : Ref[Tensor(F32)][128]    # accum.model.20.m.0.conv1.bn.gamma
+        , %para233 : Ref[Tensor(F32)][128]    # accum.model.20.m.0.conv2.bn.gamma
+        , %para234 : Ref[Tensor(F32)][256]    # accum.model.21.bn.gamma
+        , %para235 : Ref[Tensor(F32)][256]    # accum.model.23.conv1.bn.gamma
+        , %para236 : Ref[Tensor(F32)][256]    # accum.model.23.conv2.bn.gamma
+        , %para237 : Ref[Tensor(F32)][512]    # accum.model.23.conv3.bn.gamma
+        , %para238 : Ref[Tensor(F32)][256]    # accum.model.23.m.0.conv1.bn.gamma
+        , %para239 : Ref[Tensor(F32)][256]    # accum.model.23.m.0.conv2.bn.gamma
+        , %para240 : Ref[Tensor(F32)][32, 3, 6, 6]    # accum.model.0.conv.weight
+        , %para241 : Ref[Tensor(F32)][64, 32, 3, 3]    # accum.model.1.conv.weight
+        , %para242 : Ref[Tensor(F32)][32, 64, 1, 1]    # accum.model.2.conv1.conv.weight
+        , %para243 : Ref[Tensor(F32)][32, 64, 1, 1]    # accum.model.2.conv2.conv.weight
+        , %para244 : Ref[Tensor(F32)][64, 64, 1, 1]    # accum.model.2.conv3.conv.weight
+        , %para245 : Ref[Tensor(F32)][32, 32, 1, 1]    # accum.model.2.m.0.conv1.conv.weight
+        , %para246 : Ref[Tensor(F32)][32, 32, 3, 3]    # accum.model.2.m.0.conv2.conv.weight
+        , %para247 : Ref[Tensor(F32)][128, 64, 3, 3]    # accum.model.3.conv.weight
+        , %para248 : Ref[Tensor(F32)][64, 128, 1, 1]    # accum.model.4.conv1.conv.weight
+        , %para249 : Ref[Tensor(F32)][64, 128, 1, 1]    # accum.model.4.conv2.conv.weight
+        , %para250 : Ref[Tensor(F32)][128, 128, 1, 1]    # accum.model.4.conv3.conv.weight
+        , %para251 : Ref[Tensor(F32)][64, 64, 1, 1]    # accum.model.4.m.0.conv1.conv.weight
+        , %para252 : Ref[Tensor(F32)][64, 64, 3, 3]    # accum.model.4.m.0.conv2.conv.weight
+        , %para253 : Ref[Tensor(F32)][64, 64, 1, 1]    # accum.model.4.m.1.conv1.conv.weight
+        , %para254 : Ref[Tensor(F32)][64, 64, 3, 3]    # accum.model.4.m.1.conv2.conv.weight
+        , %para255 : Ref[Tensor(F32)][256, 128, 3, 3]    # accum.model.5.conv.weight
+        , %para256 : Ref[Tensor(F32)][128, 256, 1, 1]    # accum.model.6.conv1.conv.weight
+        , %para257 : Ref[Tensor(F32)][128, 256, 1, 1]    # accum.model.6.conv2.conv.weight
+        , %para258 : Ref[Tensor(F32)][256, 256, 1, 1]    # accum.model.6.conv3.conv.weight
+        , %para259 : Ref[Tensor(F32)][128, 128, 1, 1]    # accum.model.6.m.0.conv1.conv.weight
+        , %para260 : Ref[Tensor(F32)][128, 128, 3, 3]    # accum.model.6.m.0.conv2.conv.weight
+        , %para261 : Ref[Tensor(F32)][128, 128, 1, 1]    # accum.model.6.m.1.conv1.conv.weight
+        , %para262 : Ref[Tensor(F32)][128, 128, 3, 3]    # accum.model.6.m.1.conv2.conv.weight
+        , %para263 : Ref[Tensor(F32)][128, 128, 1, 1]    # accum.model.6.m.2.conv1.conv.weight
+        , %para264 : Ref[Tensor(F32)][128, 128, 3, 3]    # accum.model.6.m.2.conv2.conv.weight
+        , %para265 : Ref[Tensor(F32)][512, 256, 3, 3]    # accum.model.7.conv.weight
+        , %para266 : Ref[Tensor(F32)][256, 512, 1, 1]    # accum.model.8.conv1.conv.weight
+        , %para267 : Ref[Tensor(F32)][256, 512, 1, 1]    # accum.model.8.conv2.conv.weight
+        , %para268 : Ref[Tensor(F32)][512, 512, 1, 1]    # accum.model.8.conv3.conv.weight
+        , %para269 : Ref[Tensor(F32)][256, 256, 1, 1]    # accum.model.8.m.0.conv1.conv.weight
+        , %para270 : Ref[Tensor(F32)][256, 256, 3, 3]    # accum.model.8.m.0.conv2.conv.weight
+        , %para271 : Ref[Tensor(F32)][256, 512, 1, 1]    # accum.model.9.conv1.conv.weight
+        , %para272 : Ref[Tensor(F32)][512, 1024, 1, 1]    # accum.model.9.conv2.conv.weight
+        , %para273 : Ref[Tensor(F32)][256, 512, 1, 1]    # accum.model.10.conv.weight
+        , %para274 : Ref[Tensor(F32)][128, 512, 1, 1]    # accum.model.13.conv1.conv.weight
+        , %para275 : Ref[Tensor(F32)][128, 512, 1, 1]    # accum.model.13.conv2.conv.weight
+        , %para276 : Ref[Tensor(F32)][256, 256, 1, 1]    # accum.model.13.conv3.conv.weight
+        , %para277 : Ref[Tensor(F32)][128, 128, 1, 1]    # accum.model.13.m.0.conv1.conv.weight
+        , %para278 : Ref[Tensor(F32)][128, 128, 3, 3]    # accum.model.13.m.0.conv2.conv.weight
+        , %para279 : Ref[Tensor(F32)][128, 256, 1, 1]    # accum.model.14.conv.weight
+        , %para280 : Ref[Tensor(F32)][64, 256, 1, 1]    # accum.model.17.conv1.conv.weight
+        , %para281 : Ref[Tensor(F32)][64, 256, 1, 1]    # accum.model.17.conv2.conv.weight
+        , %para282 : Ref[Tensor(F32)][128, 128, 1, 1]    # accum.model.17.conv3.conv.weight
+        , %para283 : Ref[Tensor(F32)][64, 64, 1, 1]    # accum.model.17.m.0.conv1.conv.weight
+        , %para284 : Ref[Tensor(F32)][64, 64, 3, 3]    # accum.model.17.m.0.conv2.conv.weight
+        , %para285 : Ref[Tensor(F32)][128, 128, 3, 3]    # accum.model.18.conv.weight
+        , %para286 : Ref[Tensor(F32)][128, 256, 1, 1]    # accum.model.20.conv1.conv.weight
+        , %para287 : Ref[Tensor(F32)][128, 256, 1, 1]    # accum.model.20.conv2.conv.weight
+        , %para288 : Ref[Tensor(F32)][256, 256, 1, 1]    # accum.model.20.conv3.conv.weight
+        , %para289 : Ref[Tensor(F32)][128, 128, 1, 1]    # accum.model.20.m.0.conv1.conv.weight
+        , %para290 : Ref[Tensor(F32)][128, 128, 3, 3]    # accum.model.20.m.0.conv2.conv.weight
+        , %para291 : Ref[Tensor(F32)][256, 256, 3, 3]    # accum.model.21.conv.weight
+        , %para292 : Ref[Tensor(F32)][256, 512, 1, 1]    # accum.model.23.conv1.conv.weight
+        , %para293 : Ref[Tensor(F32)][256, 512, 1, 1]    # accum.model.23.conv2.conv.weight
+        , %para294 : Ref[Tensor(F32)][512, 512, 1, 1]    # accum.model.23.conv3.conv.weight
+        , %para295 : Ref[Tensor(F32)][256, 256, 1, 1]    # accum.model.23.m.0.conv1.conv.weight
+        , %para296 : Ref[Tensor(F32)][256, 256, 3, 3]    # accum.model.23.m.0.conv2.conv.weight
+        , %para297 : Ref[Tensor(F32)][255, 128, 1, 1]    # accum.model.24.m.0.weight
+        , %para298 : Ref[Tensor(F32)][255, 256, 1, 1]    # accum.model.24.m.1.weight
+        , %para299 : Ref[Tensor(F32)][255, 512, 1, 1]    # accum.model.24.m.2.weight
+        , %para300 : Ref[Tensor(F32)][32]    # accum.model.0.bn.beta
+        , %para301 : Ref[Tensor(F32)][64]    # accum.model.1.bn.beta
+        , %para302 : Ref[Tensor(F32)][32]    # accum.model.2.conv1.bn.beta
+        , %para303 : Ref[Tensor(F32)][32]    # accum.model.2.conv2.bn.beta
+        , %para304 : Ref[Tensor(F32)][64]    # accum.model.2.conv3.bn.beta
+        , %para305 : Ref[Tensor(F32)][32]    # accum.model.2.m.0.conv1.bn.beta
+        , %para306 : Ref[Tensor(F32)][32]    # accum.model.2.m.0.conv2.bn.beta
+        , %para307 : Ref[Tensor(F32)][128]    # accum.model.3.bn.beta
+        , %para308 : Ref[Tensor(F32)][64]    # accum.model.4.conv1.bn.beta
+        , %para309 : Ref[Tensor(F32)][64]    # accum.model.4.conv2.bn.beta
+        , %para310 : Ref[Tensor(F32)][128]    # accum.model.4.conv3.bn.beta
+        , %para311 : Ref[Tensor(F32)][64]    # accum.model.4.m.0.conv1.bn.beta
+        , %para312 : Ref[Tensor(F32)][64]    # accum.model.4.m.0.conv2.bn.beta
+        , %para313 : Ref[Tensor(F32)][64]    # accum.model.4.m.1.conv1.bn.beta
+        , %para314 : Ref[Tensor(F32)][64]    # accum.model.4.m.1.conv2.bn.beta
+        , %para315 : Ref[Tensor(F32)][256]    # accum.model.5.bn.beta
+        , %para316 : Ref[Tensor(F32)][128]    # accum.model.6.conv1.bn.beta
+        , %para317 : Ref[Tensor(F32)][128]    # accum.model.6.conv2.bn.beta
+        , %para318 : Ref[Tensor(F32)][256]    # accum.model.6.conv3.bn.beta
+        , %para319 : Ref[Tensor(F32)][128]    # accum.model.6.m.0.conv1.bn.beta
+        , %para320 : Ref[Tensor(F32)][128]    # accum.model.6.m.0.conv2.bn.beta
+        , %para321 : Ref[Tensor(F32)][128]    # accum.model.6.m.1.conv1.bn.beta
+        , %para322 : Ref[Tensor(F32)][128]    # accum.model.6.m.1.conv2.bn.beta
+        , %para323 : Ref[Tensor(F32)][128]    # accum.model.6.m.2.conv1.bn.beta
+        , %para324 : Ref[Tensor(F32)][128]    # accum.model.6.m.2.conv2.bn.beta
+        , %para325 : Ref[Tensor(F32)][512]    # accum.model.7.bn.beta
+        , %para326 : Ref[Tensor(F32)][256]    # accum.model.8.conv1.bn.beta
+        , %para327 : Ref[Tensor(F32)][256]    # accum.model.8.conv2.bn.beta
+        , %para328 : Ref[Tensor(F32)][512]    # accum.model.8.conv3.bn.beta
+        , %para329 : Ref[Tensor(F32)][256]    # accum.model.8.m.0.conv1.bn.beta
+        , %para330 : Ref[Tensor(F32)][256]    # accum.model.8.m.0.conv2.bn.beta
+        , %para331 : Ref[Tensor(F32)][256]    # accum.model.9.conv1.bn.beta
+        , %para332 : Ref[Tensor(F32)][512]    # accum.model.9.conv2.bn.beta
+        , %para333 : Ref[Tensor(F32)][256]    # accum.model.10.bn.beta
+        , %para334 : Ref[Tensor(F32)][128]    # accum.model.13.conv1.bn.beta
+        , %para335 : Ref[Tensor(F32)][128]    # accum.model.13.conv2.bn.beta
+        , %para336 : Ref[Tensor(F32)][256]    # accum.model.13.conv3.bn.beta
+        , %para337 : Ref[Tensor(F32)][128]    # accum.model.13.m.0.conv1.bn.beta
+        , %para338 : Ref[Tensor(F32)][128]    # accum.model.13.m.0.conv2.bn.beta
+        , %para339 : Ref[Tensor(F32)][128]    # accum.model.14.bn.beta
+        , %para340 : Ref[Tensor(F32)][64]    # accum.model.17.conv1.bn.beta
+        , %para341 : Ref[Tensor(F32)][64]    # accum.model.17.conv2.bn.beta
+        , %para342 : Ref[Tensor(F32)][128]    # accum.model.17.conv3.bn.beta
+        , %para343 : Ref[Tensor(F32)][64]    # accum.model.17.m.0.conv1.bn.beta
+        , %para344 : Ref[Tensor(F32)][64]    # accum.model.17.m.0.conv2.bn.beta
+        , %para345 : Ref[Tensor(F32)][128]    # accum.model.18.bn.beta
+        , %para346 : Ref[Tensor(F32)][128]    # accum.model.20.conv1.bn.beta
+        , %para347 : Ref[Tensor(F32)][128]    # accum.model.20.conv2.bn.beta
+        , %para348 : Ref[Tensor(F32)][256]    # accum.model.20.conv3.bn.beta
+        , %para349 : Ref[Tensor(F32)][128]    # accum.model.20.m.0.conv1.bn.beta
+        , %para350 : Ref[Tensor(F32)][128]    # accum.model.20.m.0.conv2.bn.beta
+        , %para351 : Ref[Tensor(F32)][256]    # accum.model.21.bn.beta
+        , %para352 : Ref[Tensor(F32)][256]    # accum.model.23.conv1.bn.beta
+        , %para353 : Ref[Tensor(F32)][256]    # accum.model.23.conv2.bn.beta
+        , %para354 : Ref[Tensor(F32)][512]    # accum.model.23.conv3.bn.beta
+        , %para355 : Ref[Tensor(F32)][256]    # accum.model.23.m.0.conv1.bn.beta
+        , %para356 : Ref[Tensor(F32)][256]    # accum.model.23.m.0.conv2.bn.beta
+        , %para357 : Ref[Tensor(F32)][255]    # accum.model.24.m.0.bias
+        , %para358 : Ref[Tensor(F32)][255]    # accum.model.24.m.1.bias
+        , %para359 : Ref[Tensor(F32)][255]    # accum.model.24.m.2.bias
+        , %para360 : Ref[Tensor(F32)][32]    # stat.model.0.bn.gamma
+        , %para361 : Ref[Tensor(F32)][64]    # stat.model.1.bn.gamma
+        , %para362 : Ref[Tensor(F32)][32]    # stat.model.2.conv1.bn.gamma
+        , %para363 : Ref[Tensor(F32)][32]    # stat.model.2.conv2.bn.gamma
+        , %para364 : Ref[Tensor(F32)][64]    # stat.model.2.conv3.bn.gamma
+        , %para365 : Ref[Tensor(F32)][32]    # stat.model.2.m.0.conv1.bn.gamma
+        , %para366 : Ref[Tensor(F32)][32]    # stat.model.2.m.0.conv2.bn.gamma
+        , %para367 : Ref[Tensor(F32)][128]    # stat.model.3.bn.gamma
+        , %para368 : Ref[Tensor(F32)][64]    # stat.model.4.conv1.bn.gamma
+        , %para369 : Ref[Tensor(F32)][64]    # stat.model.4.conv2.bn.gamma
+        , %para370 : Ref[Tensor(F32)][128]    # stat.model.4.conv3.bn.gamma
+        , %para371 : Ref[Tensor(F32)][64]    # stat.model.4.m.0.conv1.bn.gamma
+        , %para372 : Ref[Tensor(F32)][64]    # stat.model.4.m.0.conv2.bn.gamma
+        , %para373 : Ref[Tensor(F32)][64]    # stat.model.4.m.1.conv1.bn.gamma
+        , %para374 : Ref[Tensor(F32)][64]    # stat.model.4.m.1.conv2.bn.gamma
+        , %para375 : Ref[Tensor(F32)][256]    # stat.model.5.bn.gamma
+        , %para376 : Ref[Tensor(F32)][128]    # stat.model.6.conv1.bn.gamma
+        , %para377 : Ref[Tensor(F32)][128]    # stat.model.6.conv2.bn.gamma
+        , %para378 : Ref[Tensor(F32)][256]    # stat.model.6.conv3.bn.gamma
+        , %para379 : Ref[Tensor(F32)][128]    # stat.model.6.m.0.conv1.bn.gamma
+        , %para380 : Ref[Tensor(F32)][128]    # stat.model.6.m.0.conv2.bn.gamma
+        , %para381 : Ref[Tensor(F32)][128]    # stat.model.6.m.1.conv1.bn.gamma
+        , %para382 : Ref[Tensor(F32)][128]    # stat.model.6.m.1.conv2.bn.gamma
+        , %para383 : Ref[Tensor(F32)][128]    # stat.model.6.m.2.conv1.bn.gamma
+        , %para384 : Ref[Tensor(F32)][128]    # stat.model.6.m.2.conv2.bn.gamma
+        , %para385 : Ref[Tensor(F32)][512]    # stat.model.7.bn.gamma
+        , %para386 : Ref[Tensor(F32)][256]    # stat.model.8.conv1.bn.gamma
+        , %para387 : Ref[Tensor(F32)][256]    # stat.model.8.conv2.bn.gamma
+        , %para388 : Ref[Tensor(F32)][512]    # stat.model.8.conv3.bn.gamma
+        , %para389 : Ref[Tensor(F32)][256]    # stat.model.8.m.0.conv1.bn.gamma
+        , %para390 : Ref[Tensor(F32)][256]    # stat.model.8.m.0.conv2.bn.gamma
+        , %para391 : Ref[Tensor(F32)][256]    # stat.model.9.conv1.bn.gamma
+        , %para392 : Ref[Tensor(F32)][512]    # stat.model.9.conv2.bn.gamma
+        , %para393 : Ref[Tensor(F32)][256]    # stat.model.10.bn.gamma
+        , %para394 : Ref[Tensor(F32)][128]    # stat.model.13.conv1.bn.gamma
+        , %para395 : Ref[Tensor(F32)][128]    # stat.model.13.conv2.bn.gamma
+        , %para396 : Ref[Tensor(F32)][256]    # stat.model.13.conv3.bn.gamma
+        , %para397 : Ref[Tensor(F32)][128]    # stat.model.13.m.0.conv1.bn.gamma
+        , %para398 : Ref[Tensor(F32)][128]    # stat.model.13.m.0.conv2.bn.gamma
+        , %para399 : Ref[Tensor(F32)][128]    # stat.model.14.bn.gamma
+        , %para400 : Ref[Tensor(F32)][64]    # stat.model.17.conv1.bn.gamma
+        , %para401 : Ref[Tensor(F32)][64]    # stat.model.17.conv2.bn.gamma
+        , %para402 : Ref[Tensor(F32)][128]    # stat.model.17.conv3.bn.gamma
+        , %para403 : Ref[Tensor(F32)][64]    # stat.model.17.m.0.conv1.bn.gamma
+        , %para404 : Ref[Tensor(F32)][64]    # stat.model.17.m.0.conv2.bn.gamma
+        , %para405 : Ref[Tensor(F32)][128]    # stat.model.18.bn.gamma
+        , %para406 : Ref[Tensor(F32)][128]    # stat.model.20.conv1.bn.gamma
+        , %para407 : Ref[Tensor(F32)][128]    # stat.model.20.conv2.bn.gamma
+        , %para408 : Ref[Tensor(F32)][256]    # stat.model.20.conv3.bn.gamma
+        , %para409 : Ref[Tensor(F32)][128]    # stat.model.20.m.0.conv1.bn.gamma
+        , %para410 : Ref[Tensor(F32)][128]    # stat.model.20.m.0.conv2.bn.gamma
+        , %para411 : Ref[Tensor(F32)][256]    # stat.model.21.bn.gamma
+        , %para412 : Ref[Tensor(F32)][256]    # stat.model.23.conv1.bn.gamma
+        , %para413 : Ref[Tensor(F32)][256]    # stat.model.23.conv2.bn.gamma
+        , %para414 : Ref[Tensor(F32)][512]    # stat.model.23.conv3.bn.gamma
+        , %para415 : Ref[Tensor(F32)][256]    # stat.model.23.m.0.conv1.bn.gamma
+        , %para416 : Ref[Tensor(F32)][256]    # stat.model.23.m.0.conv2.bn.gamma
+        , %para417 : Ref[Tensor(F32)][32, 3, 6, 6]    # stat.model.0.conv.weight
+        , %para418 : Ref[Tensor(F32)][64, 32, 3, 3]    # stat.model.1.conv.weight
+        , %para419 : Ref[Tensor(F32)][32, 64, 1, 1]    # stat.model.2.conv1.conv.weight
+        , %para420 : Ref[Tensor(F32)][32, 64, 1, 1]    # stat.model.2.conv2.conv.weight
+        , %para421 : Ref[Tensor(F32)][64, 64, 1, 1]    # stat.model.2.conv3.conv.weight
+        , %para422 : Ref[Tensor(F32)][32, 32, 1, 1]    # stat.model.2.m.0.conv1.conv.weight
+        , %para423 : Ref[Tensor(F32)][32, 32, 3, 3]    # stat.model.2.m.0.conv2.conv.weight
+        , %para424 : Ref[Tensor(F32)][128, 64, 3, 3]    # stat.model.3.conv.weight
+        , %para425 : Ref[Tensor(F32)][64, 128, 1, 1]    # stat.model.4.conv1.conv.weight
+        , %para426 : Ref[Tensor(F32)][64, 128, 1, 1]    # stat.model.4.conv2.conv.weight
+        , %para427 : Ref[Tensor(F32)][128, 128, 1, 1]    # stat.model.4.conv3.conv.weight
+        , %para428 : Ref[Tensor(F32)][64, 64, 1, 1]    # stat.model.4.m.0.conv1.conv.weight
+        , %para429 : Ref[Tensor(F32)][64, 64, 3, 3]    # stat.model.4.m.0.conv2.conv.weight
+        , %para430 : Ref[Tensor(F32)][64, 64, 1, 1]    # stat.model.4.m.1.conv1.conv.weight
+        , %para431 : Ref[Tensor(F32)][64, 64, 3, 3]    # stat.model.4.m.1.conv2.conv.weight
+        , %para432 : Ref[Tensor(F32)][256, 128, 3, 3]    # stat.model.5.conv.weight
+        , %para433 : Ref[Tensor(F32)][128, 256, 1, 1]    # stat.model.6.conv1.conv.weight
+        , %para434 : Ref[Tensor(F32)][128, 256, 1, 1]    # stat.model.6.conv2.conv.weight
+        , %para435 : Ref[Tensor(F32)][256, 256, 1, 1]    # stat.model.6.conv3.conv.weight
+        , %para436 : Ref[Tensor(F32)][128, 128, 1, 1]    # stat.model.6.m.0.conv1.conv.weight
+        , %para437 : Ref[Tensor(F32)][128, 128, 3, 3]    # stat.model.6.m.0.conv2.conv.weight
+        , %para438 : Ref[Tensor(F32)][128, 128, 1, 1]    # stat.model.6.m.1.conv1.conv.weight
+        , %para439 : Ref[Tensor(F32)][128, 128, 3, 3]    # stat.model.6.m.1.conv2.conv.weight
+        , %para440 : Ref[Tensor(F32)][128, 128, 1, 1]    # stat.model.6.m.2.conv1.conv.weight
+        , %para441 : Ref[Tensor(F32)][128, 128, 3, 3]    # stat.model.6.m.2.conv2.conv.weight
+        , %para442 : Ref[Tensor(F32)][512, 256, 3, 3]    # stat.model.7.conv.weight
+        , %para443 : Ref[Tensor(F32)][256, 512, 1, 1]    # stat.model.8.conv1.conv.weight
+        , %para444 : Ref[Tensor(F32)][256, 512, 1, 1]    # stat.model.8.conv2.conv.weight
+        , %para445 : Ref[Tensor(F32)][512, 512, 1, 1]    # stat.model.8.conv3.conv.weight
+        , %para446 : Ref[Tensor(F32)][256, 256, 1, 1]    # stat.model.8.m.0.conv1.conv.weight
+        , %para447 : Ref[Tensor(F32)][256, 256, 3, 3]    # stat.model.8.m.0.conv2.conv.weight
+        , %para448 : Ref[Tensor(F32)][256, 512, 1, 1]    # stat.model.9.conv1.conv.weight
+        , %para449 : Ref[Tensor(F32)][512, 1024, 1, 1]    # stat.model.9.conv2.conv.weight
+        , %para450 : Ref[Tensor(F32)][256, 512, 1, 1]    # stat.model.10.conv.weight
+        , %para451 : Ref[Tensor(F32)][128, 512, 1, 1]    # stat.model.13.conv1.conv.weight
+        , %para452 : Ref[Tensor(F32)][128, 512, 1, 1]    # stat.model.13.conv2.conv.weight
+        , %para453 : Ref[Tensor(F32)][256, 256, 1, 1]    # stat.model.13.conv3.conv.weight
+        , %para454 : Ref[Tensor(F32)][128, 128, 1, 1]    # stat.model.13.m.0.conv1.conv.weight
+        , %para455 : Ref[Tensor(F32)][128, 128, 3, 3]    # stat.model.13.m.0.conv2.conv.weight
+        , %para456 : Ref[Tensor(F32)][128, 256, 1, 1]    # stat.model.14.conv.weight
+        , %para457 : Ref[Tensor(F32)][64, 256, 1, 1]    # stat.model.17.conv1.conv.weight
+        , %para458 : Ref[Tensor(F32)][64, 256, 1, 1]    # stat.model.17.conv2.conv.weight
+        , %para459 : Ref[Tensor(F32)][128, 128, 1, 1]    # stat.model.17.conv3.conv.weight
+        , %para460 : Ref[Tensor(F32)][64, 64, 1, 1]    # stat.model.17.m.0.conv1.conv.weight
+        , %para461 : Ref[Tensor(F32)][64, 64, 3, 3]    # stat.model.17.m.0.conv2.conv.weight
+        , %para462 : Ref[Tensor(F32)][128, 128, 3, 3]    # stat.model.18.conv.weight
+        , %para463 : Ref[Tensor(F32)][128, 256, 1, 1]    # stat.model.20.conv1.conv.weight
+        , %para464 : Ref[Tensor(F32)][128, 256, 1, 1]    # stat.model.20.conv2.conv.weight
+        , %para465 : Ref[Tensor(F32)][256, 256, 1, 1]    # stat.model.20.conv3.conv.weight
+        , %para466 : Ref[Tensor(F32)][128, 128, 1, 1]    # stat.model.20.m.0.conv1.conv.weight
+        , %para467 : Ref[Tensor(F32)][128, 128, 3, 3]    # stat.model.20.m.0.conv2.conv.weight
+        , %para468 : Ref[Tensor(F32)][256, 256, 3, 3]    # stat.model.21.conv.weight
+        , %para469 : Ref[Tensor(F32)][256, 512, 1, 1]    # stat.model.23.conv1.conv.weight
+        , %para470 : Ref[Tensor(F32)][256, 512, 1, 1]    # stat.model.23.conv2.conv.weight
+        , %para471 : Ref[Tensor(F32)][512, 512, 1, 1]    # stat.model.23.conv3.conv.weight
+        , %para472 : Ref[Tensor(F32)][256, 256, 1, 1]    # stat.model.23.m.0.conv1.conv.weight
+        , %para473 : Ref[Tensor(F32)][256, 256, 3, 3]    # stat.model.23.m.0.conv2.conv.weight
+        , %para474 : Ref[Tensor(F32)][255, 128, 1, 1]    # stat.model.24.m.0.weight
+        , %para475 : Ref[Tensor(F32)][255, 256, 1, 1]    # stat.model.24.m.1.weight
+        , %para476 : Ref[Tensor(F32)][255, 512, 1, 1]    # stat.model.24.m.2.weight
+        , %para477 : Ref[Tensor(F32)][32]    # stat.model.0.bn.beta
+        , %para478 : Ref[Tensor(F32)][64]    # stat.model.1.bn.beta
+        , %para479 : Ref[Tensor(F32)][32]    # stat.model.2.conv1.bn.beta
+        , %para480 : Ref[Tensor(F32)][32]    # stat.model.2.conv2.bn.beta
+        , %para481 : Ref[Tensor(F32)][64]    # stat.model.2.conv3.bn.beta
+        , %para482 : Ref[Tensor(F32)][32]    # stat.model.2.m.0.conv1.bn.beta
+        , %para483 : Ref[Tensor(F32)][32]    # stat.model.2.m.0.conv2.bn.beta
+        , %para484 : Ref[Tensor(F32)][128]    # stat.model.3.bn.beta
+        , %para485 : Ref[Tensor(F32)][64]    # stat.model.4.conv1.bn.beta
+        , %para486 : Ref[Tensor(F32)][64]    # stat.model.4.conv2.bn.beta
+        , %para487 : Ref[Tensor(F32)][128]    # stat.model.4.conv3.bn.beta
+        , %para488 : Ref[Tensor(F32)][64]    # stat.model.4.m.0.conv1.bn.beta
+        , %para489 : Ref[Tensor(F32)][64]    # stat.model.4.m.0.conv2.bn.beta
+        , %para490 : Ref[Tensor(F32)][64]    # stat.model.4.m.1.conv1.bn.beta
+        , %para491 : Ref[Tensor(F32)][64]    # stat.model.4.m.1.conv2.bn.beta
+        , %para492 : Ref[Tensor(F32)][256]    # stat.model.5.bn.beta
+        , %para493 : Ref[Tensor(F32)][128]    # stat.model.6.conv1.bn.beta
+        , %para494 : Ref[Tensor(F32)][128]    # stat.model.6.conv2.bn.beta
+        , %para495 : Ref[Tensor(F32)][256]    # stat.model.6.conv3.bn.beta
+        , %para496 : Ref[Tensor(F32)][128]    # stat.model.6.m.0.conv1.bn.beta
+        , %para497 : Ref[Tensor(F32)][128]    # stat.model.6.m.0.conv2.bn.beta
+        , %para498 : Ref[Tensor(F32)][128]    # stat.model.6.m.1.conv1.bn.beta
+        , %para499 : Ref[Tensor(F32)][128]    # stat.model.6.m.1.conv2.bn.beta
+        , %para500 : Ref[Tensor(F32)][128]    # stat.model.6.m.2.conv1.bn.beta
+        , %para501 : Ref[Tensor(F32)][128]    # stat.model.6.m.2.conv2.bn.beta
+        , %para502 : Ref[Tensor(F32)][512]    # stat.model.7.bn.beta
+        , %para503 : Ref[Tensor(F32)][256]    # stat.model.8.conv1.bn.beta
+        , %para504 : Ref[Tensor(F32)][256]    # stat.model.8.conv2.bn.beta
+        , %para505 : Ref[Tensor(F32)][512]    # stat.model.8.conv3.bn.beta
+        , %para506 : Ref[Tensor(F32)][256]    # stat.model.8.m.0.conv1.bn.beta
+        , %para507 : Ref[Tensor(F32)][256]    # stat.model.8.m.0.conv2.bn.beta
+        , %para508 : Ref[Tensor(F32)][256]    # stat.model.9.conv1.bn.beta
+        , %para509 : Ref[Tensor(F32)][512]    # stat.model.9.conv2.bn.beta
+        , %para510 : Ref[Tensor(F32)][256]    # stat.model.10.bn.beta
+        , %para511 : Ref[Tensor(F32)][128]    # stat.model.13.conv1.bn.beta
+        , %para512 : Ref[Tensor(F32)][128]    # stat.model.13.conv2.bn.beta
+        , %para513 : Ref[Tensor(F32)][256]    # stat.model.13.conv3.bn.beta
+        , %para514 : Ref[Tensor(F32)][128]    # stat.model.13.m.0.conv1.bn.beta
+        , %para515 : Ref[Tensor(F32)][128]    # stat.model.13.m.0.conv2.bn.beta
+        , %para516 : Ref[Tensor(F32)][128]    # stat.model.14.bn.beta
+        , %para517 : Ref[Tensor(F32)][64]    # stat.model.17.conv1.bn.beta
+        , %para518 : Ref[Tensor(F32)][64]    # stat.model.17.conv2.bn.beta
+        , %para519 : Ref[Tensor(F32)][128]    # stat.model.17.conv3.bn.beta
+        , %para520 : Ref[Tensor(F32)][64]    # stat.model.17.m.0.conv1.bn.beta
+        , %para521 : Ref[Tensor(F32)][64]    # stat.model.17.m.0.conv2.bn.beta
+        , %para522 : Ref[Tensor(F32)][128]    # stat.model.18.bn.beta
+        , %para523 : Ref[Tensor(F32)][128]    # stat.model.20.conv1.bn.beta
+        , %para524 : Ref[Tensor(F32)][128]    # stat.model.20.conv2.bn.beta
+        , %para525 : Ref[Tensor(F32)][256]    # stat.model.20.conv3.bn.beta
+        , %para526 : Ref[Tensor(F32)][128]    # stat.model.20.m.0.conv1.bn.beta
+        , %para527 : Ref[Tensor(F32)][128]    # stat.model.20.m.0.conv2.bn.beta
+        , %para528 : Ref[Tensor(F32)][256]    # stat.model.21.bn.beta
+        , %para529 : Ref[Tensor(F32)][256]    # stat.model.23.conv1.bn.beta
+        , %para530 : Ref[Tensor(F32)][256]    # stat.model.23.conv2.bn.beta
+        , %para531 : Ref[Tensor(F32)][512]    # stat.model.23.conv3.bn.beta
+        , %para532 : Ref[Tensor(F32)][256]    # stat.model.23.m.0.conv1.bn.beta
+        , %para533 : Ref[Tensor(F32)][256]    # stat.model.23.m.0.conv2.bn.beta
+        , %para534 : Ref[Tensor(F32)][255]    # stat.model.24.m.0.bias
+        , %para535 : Ref[Tensor(F32)][255]    # stat.model.24.m.1.bias
+        , %para536 : Ref[Tensor(F32)][255]    # stat.model.24.m.2.bias
+        , %para537 : Ref[Tensor(F32)][]    # momentum
+        , %para538 : Ref[Tensor(F32)][3]    # balance
+        , %para539 : Ref[Tensor(F32)][46800]    # learning_rate_group_0
+        , %para540 : Ref[Tensor(F32)][46800]    # learning_rate_group_1
+        , %para541 : Ref[Tensor(F32)][46800]    # learning_rate_group_2
+        , %para542 : Ref[Tensor(I32)][1]    # global_step
+        , %para543 : Ref[Tensor(F32)][32]    # model.0.bn.moving_mean
+        , %para544 : Ref[Tensor(F32)][32]    # model.0.bn.moving_variance
+        , %para545 : Ref[Tensor(F32)][64]    # model.1.bn.moving_mean
+        , %para546 : Ref[Tensor(F32)][64]    # model.1.bn.moving_variance
+        , %para547 : Ref[Tensor(F32)][128]    # model.3.bn.moving_mean
+        , %para548 : Ref[Tensor(F32)][128]    # model.3.bn.moving_variance
+        , %para549 : Ref[Tensor(F32)][256]    # model.5.bn.moving_mean
+        , %para550 : Ref[Tensor(F32)][256]    # model.5.bn.moving_variance
+        , %para551 : Ref[Tensor(F32)][512]    # model.7.bn.moving_mean
+        , %para552 : Ref[Tensor(F32)][512]    # model.7.bn.moving_variance
+        , %para553 : Ref[Tensor(F32)][256]    # model.10.bn.moving_mean
+        , %para554 : Ref[Tensor(F32)][256]    # model.10.bn.moving_variance
+        , %para555 : Ref[Tensor(F32)][128]    # model.14.bn.moving_mean
+        , %para556 : Ref[Tensor(F32)][128]    # model.14.bn.moving_variance
+        , %para557 : Ref[Tensor(F32)][128]    # model.18.bn.moving_mean
+        , %para558 : Ref[Tensor(F32)][128]    # model.18.bn.moving_variance
+        , %para559 : Ref[Tensor(F32)][256]    # model.21.bn.moving_mean
+        , %para560 : Ref[Tensor(F32)][256]    # model.21.bn.moving_variance
+        , %para561 : Ref[Tensor(F32)][3, 3, 2]    # model.24.anchors
+        , %para562 : Ref[Tensor(F32)][64]    # model.2.conv3.bn.moving_mean
+        , %para563 : Ref[Tensor(F32)][64]    # model.2.conv3.bn.moving_variance
+        , %para564 : Ref[Tensor(F32)][128]    # model.4.conv3.bn.moving_mean
+        , %para565 : Ref[Tensor(F32)][128]    # model.4.conv3.bn.moving_variance
+        , %para566 : Ref[Tensor(F32)][256]    # model.6.conv3.bn.moving_mean
+        , %para567 : Ref[Tensor(F32)][256]    # model.6.conv3.bn.moving_variance
+        , %para568 : Ref[Tensor(F32)][512]    # model.8.conv3.bn.moving_mean
+        , %para569 : Ref[Tensor(F32)][512]    # model.8.conv3.bn.moving_variance
+        , %para570 : Ref[Tensor(F32)][512]    # model.9.conv2.bn.moving_mean
+        , %para571 : Ref[Tensor(F32)][512]    # model.9.conv2.bn.moving_variance
+        , %para572 : Ref[Tensor(F32)][256]    # model.13.conv3.bn.moving_mean
+        , %para573 : Ref[Tensor(F32)][256]    # model.13.conv3.bn.moving_variance
+        , %para574 : Ref[Tensor(F32)][128]    # model.17.conv3.bn.moving_mean
+        , %para575 : Ref[Tensor(F32)][128]    # model.17.conv3.bn.moving_variance
+        , %para576 : Ref[Tensor(F32)][256]    # model.20.conv3.bn.moving_mean
+        , %para577 : Ref[Tensor(F32)][256]    # model.20.conv3.bn.moving_variance
+        , %para578 : Ref[Tensor(F32)][512]    # model.23.conv3.bn.moving_mean
+        , %para579 : Ref[Tensor(F32)][512]    # model.23.conv3.bn.moving_variance
+        , %para580 : Ref[Tensor(F32)][32]    # model.2.conv2.bn.moving_mean
+        , %para581 : Ref[Tensor(F32)][32]    # model.2.conv2.bn.moving_variance
+        , %para582 : Ref[Tensor(F32)][64]    # model.4.conv2.bn.moving_mean
+        , %para583 : Ref[Tensor(F32)][64]    # model.4.conv2.bn.moving_variance
+        , %para584 : Ref[Tensor(F32)][128]    # model.6.conv2.bn.moving_mean
+        , %para585 : Ref[Tensor(F32)][128]    # model.6.conv2.bn.moving_variance
+        , %para586 : Ref[Tensor(F32)][256]    # model.8.conv2.bn.moving_mean
+        , %para587 : Ref[Tensor(F32)][256]    # model.8.conv2.bn.moving_variance
+        , %para588 : Ref[Tensor(F32)][256]    # model.9.conv1.bn.moving_mean
+        , %para589 : Ref[Tensor(F32)][256]    # model.9.conv1.bn.moving_variance
+        , %para590 : Ref[Tensor(F32)][128]    # model.13.conv2.bn.moving_mean
+        , %para591 : Ref[Tensor(F32)][128]    # model.13.conv2.bn.moving_variance
+        , %para592 : Ref[Tensor(F32)][64]    # model.17.conv2.bn.moving_mean
+        , %para593 : Ref[Tensor(F32)][64]    # model.17.conv2.bn.moving_variance
+        , %para594 : Ref[Tensor(F32)][128]    # model.20.conv2.bn.moving_mean
+        , %para595 : Ref[Tensor(F32)][128]    # model.20.conv2.bn.moving_variance
+        , %para596 : Ref[Tensor(F32)][256]    # model.23.conv2.bn.moving_mean
+        , %para597 : Ref[Tensor(F32)][256]    # model.23.conv2.bn.moving_variance
+        , %para598 : Ref[Tensor(F32)][3, 1, 3, 1, 1, 2]    # model.24.anchor_grid
+        , %para599 : Ref[Tensor(F32)][32]    # model.2.conv1.bn.moving_mean
+        , %para600 : Ref[Tensor(F32)][32]    # model.2.conv1.bn.moving_variance
+        , %para601 : Ref[Tensor(F32)][64]    # model.4.conv1.bn.moving_mean
+        , %para602 : Ref[Tensor(F32)][64]    # model.4.conv1.bn.moving_variance
+        , %para603 : Ref[Tensor(F32)][128]    # model.6.conv1.bn.moving_mean
+        , %para604 : Ref[Tensor(F32)][128]    # model.6.conv1.bn.moving_variance
+        , %para605 : Ref[Tensor(F32)][256]    # model.8.conv1.bn.moving_mean
+        , %para606 : Ref[Tensor(F32)][256]    # model.8.conv1.bn.moving_variance
+        , %para607 : Ref[Tensor(F32)][128]    # model.13.conv1.bn.moving_mean
+        , %para608 : Ref[Tensor(F32)][128]    # model.13.conv1.bn.moving_variance
+        , %para609 : Ref[Tensor(F32)][64]    # model.17.conv1.bn.moving_mean
+        , %para610 : Ref[Tensor(F32)][64]    # model.17.conv1.bn.moving_variance
+        , %para611 : Ref[Tensor(F32)][128]    # model.20.conv1.bn.moving_mean
+        , %para612 : Ref[Tensor(F32)][128]    # model.20.conv1.bn.moving_variance
+        , %para613 : Ref[Tensor(F32)][256]    # model.23.conv1.bn.moving_mean
+        , %para614 : Ref[Tensor(F32)][256]    # model.23.conv1.bn.moving_variance
+        , %para615 : Ref[Tensor(F32)][32]    # model.2.m.0.conv2.bn.moving_mean
+        , %para616 : Ref[Tensor(F32)][32]    # model.2.m.0.conv2.bn.moving_variance
+        , %para617 : Ref[Tensor(F32)][64]    # model.4.m.0.conv2.bn.moving_mean
+        , %para618 : Ref[Tensor(F32)][64]    # model.4.m.0.conv2.bn.moving_variance
+        , %para619 : Ref[Tensor(F32)][64]    # model.4.m.1.conv2.bn.moving_mean
+        , %para620 : Ref[Tensor(F32)][64]    # model.4.m.1.conv2.bn.moving_variance
+        , %para621 : Ref[Tensor(F32)][128]    # model.6.m.0.conv2.bn.moving_mean
+        , %para622 : Ref[Tensor(F32)][128]    # model.6.m.0.conv2.bn.moving_variance
+        , %para623 : Ref[Tensor(F32)][128]    # model.6.m.1.conv2.bn.moving_mean
+        , %para624 : Ref[Tensor(F32)][128]    # model.6.m.1.conv2.bn.moving_variance
+        , %para625 : Ref[Tensor(F32)][128]    # model.6.m.2.conv2.bn.moving_mean
+        , %para626 : Ref[Tensor(F32)][128]    # model.6.m.2.conv2.bn.moving_variance
+        , %para627 : Ref[Tensor(F32)][256]    # model.8.m.0.conv2.bn.moving_mean
+        , %para628 : Ref[Tensor(F32)][256]    # model.8.m.0.conv2.bn.moving_variance
+        , %para629 : Ref[Tensor(F32)][128]    # model.13.m.0.conv2.bn.moving_mean
+        , %para630 : Ref[Tensor(F32)][128]    # model.13.m.0.conv2.bn.moving_variance
+        , %para631 : Ref[Tensor(F32)][64]    # model.17.m.0.conv2.bn.moving_mean
+        , %para632 : Ref[Tensor(F32)][64]    # model.17.m.0.conv2.bn.moving_variance
+        , %para633 : Ref[Tensor(F32)][128]    # model.20.m.0.conv2.bn.moving_mean
+        , %para634 : Ref[Tensor(F32)][128]    # model.20.m.0.conv2.bn.moving_variance
+        , %para635 : Ref[Tensor(F32)][256]    # model.23.m.0.conv2.bn.moving_mean
+        , %para636 : Ref[Tensor(F32)][256]    # model.23.m.0.conv2.bn.moving_variance
+        , %para637 : Ref[Tensor(F32)][32]    # model.2.m.0.conv1.bn.moving_mean
+        , %para638 : Ref[Tensor(F32)][32]    # model.2.m.0.conv1.bn.moving_variance
+        , %para639 : Ref[Tensor(F32)][64]    # model.4.m.0.conv1.bn.moving_mean
+        , %para640 : Ref[Tensor(F32)][64]    # model.4.m.0.conv1.bn.moving_variance
+        , %para641 : Ref[Tensor(F32)][64]    # model.4.m.1.conv1.bn.moving_mean
+        , %para642 : Ref[Tensor(F32)][64]    # model.4.m.1.conv1.bn.moving_variance
+        , %para643 : Ref[Tensor(F32)][128]    # model.6.m.0.conv1.bn.moving_mean
+        , %para644 : Ref[Tensor(F32)][128]    # model.6.m.0.conv1.bn.moving_variance
+        , %para645 : Ref[Tensor(F32)][128]    # model.6.m.1.conv1.bn.moving_mean
+        , %para646 : Ref[Tensor(F32)][128]    # model.6.m.1.conv1.bn.moving_variance
+        , %para647 : Ref[Tensor(F32)][128]    # model.6.m.2.conv1.bn.moving_mean
+        , %para648 : Ref[Tensor(F32)][128]    # model.6.m.2.conv1.bn.moving_variance
+        , %para649 : Ref[Tensor(F32)][256]    # model.8.m.0.conv1.bn.moving_mean
+        , %para650 : Ref[Tensor(F32)][256]    # model.8.m.0.conv1.bn.moving_variance
+        , %para651 : Ref[Tensor(F32)][128]    # model.13.m.0.conv1.bn.moving_mean
+        , %para652 : Ref[Tensor(F32)][128]    # model.13.m.0.conv1.bn.moving_variance
+        , %para653 : Ref[Tensor(F32)][64]    # model.17.m.0.conv1.bn.moving_mean
+        , %para654 : Ref[Tensor(F32)][64]    # model.17.m.0.conv1.bn.moving_variance
+        , %para655 : Ref[Tensor(F32)][128]    # model.20.m.0.conv1.bn.moving_mean
+        , %para656 : Ref[Tensor(F32)][128]    # model.20.m.0.conv1.bn.moving_variance
+        , %para657 : Ref[Tensor(F32)][256]    # model.23.m.0.conv1.bn.moving_mean
+        , %para658 : Ref[Tensor(F32)][256]    # model.23.m.0.conv1.bn.moving_variance
+    ) {
+    %1 : BoolNoShape = FuncGraph::fg_26(%para4)    #(BoolNoShape)    # fg_26=bool_.26 #scope: Default
+      # In file train.py:693/        if optimizer_update:/#[CNode]27
+    %2 : FuncNoShape = Primitive::Switch{prim_type=1}(%1, FuncGraph::fg_22, FuncGraph::fg_28)    #(BoolNoShape, FuncNoShape, FuncNoShape)    # fg_22=✓train_step.22, fg_28=✗train_step.28 #scope: Default
+      # In file train.py:693/        if optimizer_update:/#[CNode]29
+
+#------------------------> 0
+    %3 = %2() #scope: Default
+      # In file train.py:693/        if optimizer_update:/#[CNode]30
+    %4 = FuncGraph::fg_31(%3)    #(Undefined)    # fg_31=↓train_step.31 #scope: Default
+#[CNode]32
+    Primitive::Return{prim_type=1}(%4)    #(Undefined) #scope: Default
+      # In file train.py:693/        if optimizer_update:/#[CNode]33
+}
+# order:
+#   1: @train_step.21:[CNode]34{[0]: ValueNode<FuncGraph> forward_func.35, [1]: x, [2]: label, [3]: sizes}
+#   2: @train_step.21:loss{[0]: ValueNode<DoSignaturePrimitive> S-Prim-getitem, [1]: [CNode]34, [2]: ValueNode<Int64Imm> 0}
+#   3: @train_step.21:фloss_items{[0]: ValueNode<DoSignaturePrimitive> S-Prim-getitem, [1]: [CNode]34, [2]: ValueNode<Int64Imm> 1}
+#   4: @train_step.21:[CNode]36{[0]: ValueNode<Primitive> getattr, [1]: loss, [2]: ValueNode<StringImm> dtype}
+#   5: @train_step.21:[CNode]37{[0]: ValueNode<Primitive> getattr, [1]: loss, [2]: ValueNode<StringImm> shape}
+#   6: @train_step.21:[CNode]38{[0]: ValueNode<FuncGraph> fill.39, [1]: [CNode]36, [2]: [CNode]37, [3]: ValueNode<FP32Imm> 1.000000}
+#   7: @train_step.21:[CNode]40{[0]: ValueNode<Primitive> getattr, [1]: фloss_items, [2]: ValueNode<StringImm> dtype}
+#   8: @train_step.21:[CNode]41{[0]: ValueNode<Primitive> getattr, [1]: фloss_items, [2]: ValueNode<StringImm> shape}
+#   9: @train_step.21:[CNode]42{[0]: ValueNode<FuncGraph> fill.39, [1]: [CNode]40, [2]: [CNode]41, [3]: ValueNode<FP32Imm> 1.000000}
+#  10: @train_step.21:[CNode]43{[0]: ValueNode<DoSignaturePrimitive> S-Prim-MakeTuple, [1]: [CNode]38, [2]: [CNode]42}
+#  11: @train_step.21:sens1{[0]: ValueNode<DoSignaturePrimitive> S-Prim-getitem, [1]: [CNode]43, [2]: ValueNode<Int64Imm> 0}
+#  12: @train_step.21:sens2{[0]: ValueNode<DoSignaturePrimitive> S-Prim-getitem, [1]: [CNode]43, [2]: ValueNode<Int64Imm> 1}
+#  13: @train_step.21:[CNode]44{[0]: ValueNode<DoSignaturePrimitive> S-Prim-MakeTuple, [1]: sens1, [2]: sens2}
+#  14: @train_step.21:grads{[0]: ValueNode<FuncGraph> after_grad.45, [1]: x, [2]: label, [3]: sizes, [4]: [CNode]44}
+#  15: @train_step.21:grads{[0]: ValueNode<DoSignaturePrimitive> S-Prim-identity, [1]: grads}
+#  16: @train_step.21:фgrads{[0]: ValueNode<FuncGraph> unscale.46, [1]: grads}
+#  17: @train_step.21:фgrads_finite{[0]: ValueNode<FuncGraph> all_finite.47, [1]: фgrads}
+#  18: @train_step.21:[CNode]27{[0]: ValueNode<FuncGraph> bool_.26, [1]: optimizer_update}
+#  19: @train_step.21:[CNode]29{[0]: ValueNode<Primitive> Switch, [1]: [CNode]27, [2]: ValueNode<FuncGraph> ✓train_step.22, [3]: ValueNode<FuncGraph> ✗train_step.28}
+#  20: @train_step.21:[CNode]30{[0]: [CNode]29}
+#  21: @train_step.21:[CNode]32{[0]: ValueNode<FuncGraph> ↓train_step.31, [1]: [CNode]30}
+#  22: @train_step.21:[CNode]33{[0]: ValueNode<Primitive> Return, [1]: [CNode]32}
+
+
+# [No.2] ✓train_step.22
+# In file train.py:693/        if optimizer_update:/
+funcgraph fg_22[fg_21](
+) {
+
+#------------------------> 1
+    %1 = $(train_step.21):FuncGraph::fg_35(%para1, %para2, %para3)    #(Tensor(F32)[32, 3, 640, 640], Tensor(F32)[32, 160, 6], NoneTypeNoShape)    # fg_35=forward_func.35 #scope: Default
+      # In file train.py:685/        loss, loss_items = forward_func(x, label, sizes)/#[CNode]34
+    %2 = $(train_step.21):DoSignaturePrimitive::S-Prim-getitem{prim_type=1}(%1, I64(0))    #(Undefined, Undefined) #scope: Default
+      # In file train.py:685/        loss, loss_items = forward_func(x, label, sizes)/#loss
+    %3 = $(train_step.21):Primitive::getattr{prim_type=1}(%2, "dtype")    #(Undefined, Undefined) #scope: Default
+      # In file train.py:686/        sens1, sens2 = ops.fill(loss.dtype, loss.shape, sens_value), \/#[CNode]36
+    %4 = $(train_step.21):Primitive::getattr{prim_type=1}(%2, "shape")    #(Undefined, Undefined) #scope: Default
+      # In file train.py:686/        sens1, sens2 = ops.fill(loss.dtype, loss.shape, sens_value), \/#[CNode]37
+    %5 = $(train_step.21):FuncGraph::fg_39(%3, %4, F32(1))    #(Undefined, Undefined, Undefined)    # fg_39=fill.39 #scope: Default
+      # In file train.py:686/        sens1, sens2 = ops.fill(loss.dtype, loss.shape, sens_value), \/#[CNode]38
+    %6 = $(train_step.21):DoSignaturePrimitive::S-Prim-getitem{prim_type=1}(%1, I64(1))    #(Undefined, Undefined) #scope: Default
+      # In file train.py:703/        return loss, loss_items, grads, grads_finite/#фloss_items
+    %7 = $(train_step.21):Primitive::getattr{prim_type=1}(%6, "dtype")    #(Undefined, Undefined) #scope: Default
+      # In file train.py:687/                       ops.fill(loss_items.dtype, loss_items.shape, sens_value)/#[CNode]40
+    %8 = $(train_step.21):Primitive::getattr{prim_type=1}(%6, "shape")    #(Undefined, Undefined) #scope: Default
+      # In file train.py:687/                       ops.fill(loss_items.dtype, loss_items.shape, sens_value)/#[CNode]41
+    %9 = $(train_step.21):FuncGraph::fg_39(%7, %8, F32(1))    #(Undefined, Undefined, Undefined)    # fg_39=fill.39 #scope: Default
+      # In file train.py:687/                       ops.fill(loss_items.dtype, loss_items.shape, sens_value)/#[CNode]42
+    %10 = $(train_step.21):DoSignaturePrimitive::S-Prim-MakeTuple{prim_type=1}(%5, %9)    #(Undefined, Undefined) #scope: Default
+      # In file train.py:686/        sens1, sens2 = ops.fill(loss.dtype, loss.shape, sens_value), \/#[CNode]43
+    %11 = $(train_step.21):DoSignaturePrimitive::S-Prim-getitem{prim_type=1}(%10, I64(0))    #(Undefined, Undefined) #scope: Default
+      # In file train.py:686/        sens1, sens2 = ops.fill(loss.dtype, loss.shape, sens_value), \/#sens1
+    %12 = $(train_step.21):DoSignaturePrimitive::S-Prim-getitem{prim_type=1}(%10, I64(1))    #(Undefined, Undefined) #scope: Default
+      # In file train.py:686/        sens1, sens2 = ops.fill(loss.dtype, loss.shape, sens_value), \/#sens2
+    %13 = $(train_step.21):DoSignaturePrimitive::S-Prim-MakeTuple{prim_type=1}(%11, %12)    #(Undefined, Undefined) #scope: Default
+      # In file train.py:688/        grads = grad_fn(x, label, sizes, (sens1, sens2))/#[CNode]44
+    %14 = $(train_step.21):FuncGraph::fg_45(%para1, %para2, %para3, %13)    #(Tensor(F32)[32, 3, 640, 640], Tensor(F32)[32, 160, 6], NoneTypeNoShape, Undefined)    # fg_45=after_grad.45 #scope: Default
+      # In file train.py:688/        grads = grad_fn(x, label, sizes, (sens1, sens2))/#grads
+    %15 = $(train_step.21):DoSignaturePrimitive::S-Prim-identity{prim_type=1}[side_effect_propagate=I64(1)](%14)    #(Undefined) #scope: Default
+      # In file train.py:689/        grads = grad_reducer(grads)/#grads
+    %16 = $(train_step.21):FuncGraph::fg_46(%15)    #(Undefined)    # fg_46=unscale.46 #scope: Default
+      # In file train.py:703/        return loss, loss_items, grads, grads_finite/#фgrads
+    %17 = $(train_step.21):FuncGraph::fg_47(%16)    #(Undefined)    # fg_47=all_finite.47 #scope: Default
+      # In file train.py:703/        return loss, loss_items, grads, grads_finite/#фgrads_finite
+    %18 = FuncGraph::fg_26(%17)    #(Undefined)    # fg_26=bool_.26 #scope: Default
+      # In file train.py:694/            if grads_finite:/#[CNode]48
+    %19 = Primitive::Switch{prim_type=1}(%18, FuncGraph::fg_49, FuncGraph::fg_50)    #(Undefined, Undefined, Undefined)    # fg_49=✓✓train_step.49, fg_50=✗✓train_step.50 #scope: Default
+      # In file train.py:694/            if grads_finite:/#[CNode]51
+    %20 = %19() #scope: Default
+      # In file train.py:694/            if grads_finite:/#[CNode]52
+    %21 = FuncGraph::fg_53(%20)    #(Undefined)    # fg_53=↓✓train_step.53 #scope: Default
+#[CNode]54
+    Primitive::Return{prim_type=1}(%21)    #(Undefined) #scope: Default
+      # In file train.py:694/            if grads_finite:/#[CNode]55
+}
+# order:
+#   1: @✓train_step.22:[CNode]48{[0]: ValueNode<FuncGraph> bool_.26, [1]: фgrads_finite}
+#   2: @✓train_step.22:[CNode]51{[0]: ValueNode<Primitive> Switch, [1]: [CNode]48, [2]: ValueNode<FuncGraph> ✓✓train_step.49, [3]: ValueNode<FuncGraph> ✗✓train_step.50}
+#   3: @✓train_step.22:[CNode]52{[0]: [CNode]51}
+#   4: @✓train_step.22:[CNode]54{[0]: ValueNode<FuncGraph> ↓✓train_step.53, [1]: [CNode]52}
+#   5: @✓train_step.22:[CNode]55{[0]: ValueNode<Primitive> Return, [1]: [CNode]54}
+
+
+# [No.3] forward_func.23
+# In file train.py:668/    def forward_func(x, label, sizes=None):/
+funcgraph fg_23[fg_21](
+        %para659 : Tensor(F32)[32, 3, 640, 640]    # x
+        , %para660 : Tensor(F32)[32, 160, 6]    # фlabel
+        , %para661 : NoneTypeNoShape    # sizes
+    ) {
+    %1 : BoolNoShape = DoSignaturePrimitive::S-Prim-is_not{prim_type=1}(%para661, None)    #(NoneTypeNoShape, NoneTypeNoShape) #scope: Default
+      # In file train.py:670/        if sizes is not None:/#[CNode]56
+    %2 : BoolNoShape = FuncGraph::fg_57(%1)    #(BoolNoShape)    # fg_57=bool_.57 #scope: Default
+      # In file train.py:670/        if sizes is not None:/#[CNode]58
+    %3 : FuncNoShape = Primitive::Switch{prim_type=1}(%2, FuncGraph::fg_59, FuncGraph::fg_60)    #(BoolNoShape, FuncNoShape, FuncNoShape)    # fg_59=✓forward_func.59, fg_60=✗forward_func.60 #scope: Default
+      # In file train.py:670/        if sizes is not None:/#[CNode]61
+    %4 : Tensor(F32)[32, 3, 640, 640] = %3() #scope: Default
+      # In file train.py:670/        if sizes is not None:/#[CNode]62
+
+#------------------------> 2
+    %5 = FuncGraph::fg_24(%4)    #(Tensor(F32)[32, 3, 640, 640])    # fg_24=↓forward_func.24 #scope: Default
+      # In file train.py:685/        loss, loss_items = forward_func(x, label, sizes)/#[CNode]63
+    Primitive::Return{prim_type=1}(%5)    #(Undefined) #scope: Default
+      # In file train.py:670/        if sizes is not None:/#[CNode]64
+}
+# order:
+#   1: @forward_func.23:x{[0]: ValueNode<DoSignaturePrimitive> S-Prim-div, [1]: x, [2]: ValueNode<FP32Imm> 255.000000}
+#   2: @forward_func.23:[CNode]56{[0]: ValueNode<DoSignaturePrimitive> S-Prim-is_not, [1]: sizes, [2]: ValueNode<None> None}
+#   3: @forward_func.23:[CNode]58{[0]: ValueNode<FuncGraph> bool_.57, [1]: [CNode]56}
+#   4: @forward_func.23:[CNode]61{[0]: ValueNode<Primitive> Switch, [1]: [CNode]58, [2]: ValueNode<FuncGraph> ✓forward_func.59, [3]: ValueNode<FuncGraph> ✗forward_func.60}
+#   5: @forward_func.23:[CNode]62{[0]: [CNode]61}
+#   6: @forward_func.23:[CNode]63{[0]: ValueNode<FuncGraph> ↓forward_func.24, [1]: [CNode]62}
+#   7: @forward_func.23:[CNode]64{[0]: ValueNode<Primitive> Return, [1]: [CNode]63}
+
+
+# [No.4] ↓forward_func.24
+# In file train.py:670/        if sizes is not None:/
+funcgraph fg_24[fg_23](
+        %para662 : Tensor(F32)[32, 3, 640, 640]    # фx
+    ) {
+    %1 : BoolNoShape = FuncGraph::fg_57(Bool(1))    #(BoolNoShape)    # fg_57=bool_.57 #scope: Default
+      # In file train.py:673/        if use_ota:/#[CNode]65
+    %2 : FuncNoShape = Primitive::Switch{prim_type=1}(%1, FuncGraph::fg_25, FuncGraph::fg_66)    #(BoolNoShape, FuncNoShape, FuncNoShape)    # fg_25=✓↓forward_func.25, fg_66=✗↓forward_func.66 #scope: Default
+      # In file train.py:673/        if use_ota:/#[CNode]67
+
+#------------------------> 3
+    %3 = %2() #scope: Default
+      # In file train.py:673/        if use_ota:/#[CNode]68
+    %4 = Primitive::TupleGetItem{prim_type=1}(%3, I64(0))    #(Undefined, Undefined) #scope: Default
+      # In file train.py:685/        loss, loss_items = forward_func(x, label, sizes)/#[CNode]69
+    %5 = Primitive::TupleGetItem{prim_type=1}(%3, I64(1))    #(Undefined, Undefined) #scope: Default
+      # In file train.py:685/        loss, loss_items = forward_func(x, label, sizes)/#[CNode]70
+    %6 = FuncGraph::fg_71(%4, %5)    #(Undefined, Undefined)    # fg_71=↓↓forward_func.71 #scope: Default
+      # In file train.py:685/        loss, loss_items = forward_func(x, label, sizes)/#[CNode]72
+    Primitive::Return{prim_type=1}(%6)    #(Undefined) #scope: Default
+      # In file train.py:673/        if use_ota:/#[CNode]73
+}
+# order:
+#   1: @↓forward_func.24:pred{[0]: ValueNode<FuncGraph> Default.74, [1]: фx}
+#   2: @↓forward_func.24:[CNode]65{[0]: ValueNode<FuncGraph> bool_.57, [1]: ValueNode<BoolImm> true}
+#   3: @↓forward_func.24:[CNode]67{[0]: ValueNode<Primitive> Switch, [1]: [CNode]65, [2]: ValueNode<FuncGraph> ✓↓forward_func.25, [3]: ValueNode<FuncGraph> ✗↓forward_func.66}
+#   4: @↓forward_func.24:[CNode]68{[0]: [CNode]67}
+#   5: @↓forward_func.24:[CNode]72{[0]: ValueNode<FuncGraph> ↓↓forward_func.71, [1]: [CNode]69, [2]: [CNode]70}
+#   6: @↓forward_func.24:[CNode]73{[0]: ValueNode<Primitive> Return, [1]: [CNode]72}
+#   7: @↓forward_func.24:[CNode]69{[0]: ValueNode<Primitive> TupleGetItem, [1]: [CNode]68, [2]: ValueNode<Int64Imm> 0}
+#   8: @↓forward_func.24:[CNode]70{[0]: ValueNode<Primitive> TupleGetItem, [1]: [CNode]68, [2]: ValueNode<Int64Imm> 1}
+
+
+# [No.5] ✓↓forward_func.25
+# In file train.py:673/        if use_ota:/
+funcgraph fg_25[fg_24](
+) {
+    %1 : $(↓forward_func.24):Tuple[Tensor(F32)*3]TupleShape((32, 3, 80, 80, 85), (32, 3, 40, 40, 85), (32, 3, 20, 20, 85)) = FuncGraph::fg_74(%para662)    #(Tensor(F32)[32, 3, 640, 640])    # fg_74=Default.74 #scope: Default
+      # In file train.py:672/        pred = model(x)/#pred
+
+#------------------------> 4
+    %2 = FuncGraph::fg_20(%1, %para660, %para662)    #(Tuple[Tensor(F32)*3]TupleShape((32, 3, 80, 80, 85), (32, 3, 40, 40, 85), (32, 3, 20, 20, 85)), Tensor(F32)[32, 160, 6], Tensor(F32)[32, 3, 640, 640])    # fg_20=Default.20 #scope: Default
+      # In file train.py:674/            loss, loss_items = compute_loss(pred, label, x)/#[CNode]75
+    %3 = DoSignaturePrimitive::S-Prim-getitem{prim_type=1}(%2, I64(0))    #(Undefined, Undefined) #scope: Default
+      # In file train.py:674/            loss, loss_items = compute_loss(pred, label, x)/#loss
+    %4 = DoSignaturePrimitive::S-Prim-getitem{prim_type=1}(%2, I64(1))    #(Undefined, Undefined) #scope: Default
+      # In file train.py:674/            loss, loss_items = compute_loss(pred, label, x)/#loss_items
+    %5 = Primitive::MakeTuple{prim_type=1}(%3, %4)    #(Undefined, Undefined) #scope: Default
+      # In file train.py:685/        loss, loss_items = forward_func(x, label, sizes)/#[CNode]76
+    Primitive::Return{prim_type=1}(%5)    #(Undefined) #scope: Default
+      # In file train.py:673/        if use_ota:/#[CNode]77
+}
+# order:
+#   1: @✓↓forward_func.25:[CNode]75{[0]: ValueNode<FuncGraph> Default.20, [1]: pred, [2]: фlabel, [3]: фx}
+#   2: @✓↓forward_func.25:loss{[0]: ValueNode<DoSignaturePrimitive> S-Prim-getitem, [1]: [CNode]75, [2]: ValueNode<Int64Imm> 0}
+#   3: @✓↓forward_func.25:loss_items{[0]: ValueNode<DoSignaturePrimitive> S-Prim-getitem, [1]: [CNode]75, [2]: ValueNode<Int64Imm> 1}
+#   4: @✓↓forward_func.25:[CNode]77{[0]: ValueNode<Primitive> Return, [1]: [CNode]76}
+#   5: @✓↓forward_func.25:[CNode]76{[0]: ValueNode<Primitive> MakeTuple, [1]: loss, [2]: loss_items}
+
+
+#===============================================================================
+# num of function graphs in stack: 5
